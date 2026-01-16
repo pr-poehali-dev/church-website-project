@@ -570,11 +570,13 @@ const Index = () => {
       <footer className="bg-primary text-white py-12">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-6">
-            <img 
-              src="https://cdn.poehali.dev/files/фон 65.jpg" 
-              alt="Церковь Бога Моего" 
-              className="w-20 h-20 object-contain mx-auto mb-4 rounded-lg shadow-lg"
-            />
+            <div className="inline-block bg-white/10 backdrop-blur-sm p-3 rounded-2xl mb-4">
+              <img 
+                src="https://cdn.poehali.dev/files/фон 65.jpg" 
+                alt="Церковь Бога Моего" 
+                className="w-24 h-24 object-contain mx-auto rounded-xl shadow-2xl"
+              />
+            </div>
             <h3 className="text-2xl font-semibold mb-2">Церковь Бога Моего</h3>
             <p className="text-white/80">Павла Красильникова 109</p>
           </div>
