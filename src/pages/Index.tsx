@@ -65,7 +65,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
-              src="https://cdn.poehali.dev/files/фон 72.PNG" 
+              src="https://cdn.poehali.dev/files/фон 65.jpg" 
               alt="Церковь Бога Моего" 
               className="h-14 w-14 object-contain rounded-lg shadow-md"
             />
