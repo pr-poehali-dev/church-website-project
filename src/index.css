@@ -156,6 +156,17 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-on-scroll {
   opacity: 0;
   animation-fill-mode: forwards;
@@ -200,4 +211,8 @@
 
 .delay-500 {
   animation-delay: 0.5s;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
