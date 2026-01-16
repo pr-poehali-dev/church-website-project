@@ -86,6 +86,15 @@ const Index = () => {
             <Icon name="Calendar" className="mr-2" size={20} />
             Посетить служение
           </Button>
+          <div className="mt-16 animate-bounce">
+            <button
+              onClick={() => scrollToSection("about")}
+              className="flex flex-col items-center gap-2 text-white/90 hover:text-white transition-colors"
+            >
+              <span className="text-sm font-light">Узнать больше</span>
+              <Icon name="ChevronDown" size={32} />
+            </button>
+          </div>
         </div>
       </section>
 
