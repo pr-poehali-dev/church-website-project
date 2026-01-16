@@ -474,7 +474,7 @@ const Index = () => {
                     <Icon name="Mail" className="text-primary mt-1" size={20} />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">info@church-god.ru</p>
+                      <p className="text-muted-foreground">cerkv_irkutsk@mail.ru</p>
                     </div>
                   </div>
                   <a 
