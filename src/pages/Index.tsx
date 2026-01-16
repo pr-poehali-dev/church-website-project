@@ -107,7 +107,7 @@ const Index = () => {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('https://cdn.poehali.dev/files/фон 77.PNG')`,
+            backgroundImage: `url('https://cdn.poehali.dev/files/фон 78.PNG')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
