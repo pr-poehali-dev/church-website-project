@@ -183,6 +183,22 @@ const Index = () => {
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Icon name="Users" className="text-primary" size={28} />
+                  </div>
+                </div>
+                <div className="flex-grow">
+                  <h3 className="text-2xl font-semibold mb-2 text-primary">Сестринский разговор</h3>
+                  <p className="text-lg text-muted-foreground mb-2">Четверг</p>
+                  <p className="text-muted-foreground">
+                    Встреча сестер церкви для общения, молитвы и взаимной поддержки
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="shadow-lg">
+              <CardContent className="p-8 flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                     <Icon name="BookOpen" className="text-primary" size={28} />
                   </div>
                 </div>
