@@ -444,42 +444,6 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardContent className="p-8">
-                <div className="flex items-start gap-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Icon name="PlayCircle" className="text-primary" size={28} />
-                    </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-2xl font-semibold mb-2 text-primary">Любовь как основа</h3>
-                    <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 7 января 2026</p>
-                    <p className="text-muted-foreground">
-                      Размышления о любви Божьей и как мы можем проявлять её в отношениях
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardContent className="p-8">
-                <div className="flex items-start gap-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Icon name="PlayCircle" className="text-primary" size={28} />
-                    </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-2xl font-semibold mb-2 text-primary">Обновление через Духа</h3>
-                    <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 31 декабря 2025</p>
-                    <p className="text-muted-foreground">
-                      Как Святой Дух обновляет нашу жизнь и даёт силу для преодоления трудностей
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
