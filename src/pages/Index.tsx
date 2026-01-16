@@ -167,7 +167,7 @@ const Index = () => {
             Расписание богослужений
           </h2>
           <div className="max-w-3xl mx-auto grid gap-6">
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-100">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-100 border-2 border-primary">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
