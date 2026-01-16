@@ -429,9 +429,7 @@ const Index = () => {
                   <div className="flex-grow">
                     <h3 className="text-2xl font-semibold mb-2 text-primary">Сила Божье Благодати</h3>
                     <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 11 января 2026</p>
-                    <p className="text-muted-foreground mb-4">
-                      Исследование силы веры и её влияния на нашу повседневную жизнь
-                    </p>
+                    <p className="text-muted-foreground mb-4">Благодать — это подарок Бога, который невозможно купить или заработать.</p>
                     <a 
                       href="https://rutube.ru/video/67904ab1f57a236744674e492b534fea/" 
                       target="_blank" 
