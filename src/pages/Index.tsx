@@ -151,22 +151,6 @@ const Index = () => {
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Music" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Поклонение Богу</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Понедельник, 08:00</p>
-                  <p className="text-muted-foreground">
-                    Начинаем неделю с поклонения к Богу
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg">
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                     <Icon name="Sun" className="text-primary" size={28} />
                   </div>
                 </div>
@@ -175,6 +159,22 @@ const Index = () => {
                   <p className="text-lg text-muted-foreground mb-2">Воскресенье, 13:00</p>
                   <p className="text-muted-foreground">
                     Основное воскресное богослужение с проповедью, прославлением и общением
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="shadow-lg">
+              <CardContent className="p-8 flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Icon name="Music" className="text-primary" size={28} />
+                  </div>
+                </div>
+                <div className="flex-grow">
+                  <h3 className="text-2xl font-semibold mb-2 text-primary">Поклонение Богу</h3>
+                  <p className="text-lg text-muted-foreground mb-2">Понедельник, 08:00</p>
+                  <p className="text-muted-foreground">
+                    Начинаем неделю с поклонения к Богу
                   </p>
                 </div>
               </CardContent>
