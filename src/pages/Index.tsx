@@ -452,6 +452,18 @@ const Index = () => {
                       <p className="text-muted-foreground">info@church-god.ru</p>
                     </div>
                   </div>
+                  <a 
+                    href="https://vk.com/cerkv_irkutsk?from=groups" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 hover:opacity-80 transition-opacity"
+                  >
+                    <Icon name="Users" className="text-primary mt-1" size={20} />
+                    <div>
+                      <p className="font-medium">ВКонтакте</p>
+                      <p className="text-muted-foreground">Наша группа</p>
+                    </div>
+                  </a>
                 </div>
               </CardContent>
             </Card>
