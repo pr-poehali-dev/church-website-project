@@ -65,7 +65,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
-              src="https://cdn.poehali.dev/files/фон 65.jpg" 
+              src="https://cdn.poehali.dev/files/фон 72.PNG" 
               alt="Церковь Бога Моего" 
               className="h-14 w-14 object-contain rounded-lg shadow-md"
             />
@@ -115,7 +115,7 @@ const Index = () => {
         <div className="container mx-auto px-4 z-10 text-center animate-fade-in">
           <div className="mb-6 inline-block">
             <img 
-              src="https://cdn.poehali.dev/files/фон 65.jpg" 
+              src="https://cdn.poehali.dev/files/фон 72.PNG" 
               alt="Церковь Бога Моего" 
               className="w-32 h-32 md:w-40 md:h-40 object-contain mx-auto drop-shadow-2xl"
             />
@@ -572,10 +572,9 @@ const Index = () => {
           <div className="mb-6">
             <div className="inline-block mb-4 bg-white/10 backdrop-blur-sm p-4 rounded-2xl">
               <img 
-                src="https://cdn.poehali.dev/files/фон 65.jpg" 
+                src="https://cdn.poehali.dev/files/фон 72.PNG" 
                 alt="Церковь Бога Моего" 
                 className="w-20 h-20 object-contain mx-auto"
-                style={{ mixBlendMode: 'screen' }}
               />
             </div>
             <h3 className="text-2xl font-semibold mb-2">Церковь Бога Моего</h3>
