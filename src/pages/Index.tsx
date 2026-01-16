@@ -464,6 +464,18 @@ const Index = () => {
                       <p className="text-muted-foreground">Наша группа</p>
                     </div>
                   </a>
+                  <a 
+                    href="https://rutube.ru/channel/41528628/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 hover:opacity-80 transition-opacity"
+                  >
+                    <Icon name="Video" className="text-primary mt-1" size={20} />
+                    <div>
+                      <p className="font-medium">RuTube</p>
+                      <p className="text-muted-foreground">Наш канал</p>
+                    </div>
+                  </a>
                 </div>
               </CardContent>
             </Card>
