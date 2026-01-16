@@ -18,11 +18,16 @@ const Index = () => {
   const [showPrayerDialog, setShowPrayerDialog] = useState(false);
   const [showSistersDialog, setShowSistersDialog] = useState(false);
   const [showBrothersDialog, setShowBrothersDialog] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
     const element = document.getElementById(section);
     element?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -43,6 +48,15 @@ const Index = () => {
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 500);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -688,6 +702,16 @@ const Index = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary/90 transition-all z-50 animate-fade-in"
+          aria-label="Наверх"
+        >
+          <Icon name="ArrowUp" size={24} />
+        </button>
+      )}
     </div>
   );
 };
