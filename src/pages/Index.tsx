@@ -63,8 +63,12 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Icon name="Cross" className="text-primary" size={28} />
+          <div className="flex items-center gap-3">
+            <img 
+              src="https://cdn.poehali.dev/files/фон 26.jpg" 
+              alt="Церковь Бога Моего" 
+              className="h-12 w-auto object-contain"
+            />
             <span className="text-xl font-semibold text-primary">Церковь Бога Моего</span>
           </div>
           <div className="hidden md:flex gap-6">
