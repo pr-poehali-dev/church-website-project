@@ -188,7 +188,7 @@ const Index = () => {
                 </div>
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Сестринский разговор</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Четверг</p>
+                  <p className="text-lg text-muted-foreground mb-2">Четверг, 19:00</p>
                   <p className="text-muted-foreground">
                     Встреча сестер церкви для общения, молитвы и взаимной поддержки
                   </p>
