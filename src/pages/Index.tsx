@@ -2,9 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
+  const [showSundayDialog, setShowSundayDialog] = useState(false);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
@@ -167,7 +175,7 @@ const Index = () => {
             Расписание богослужений
           </h2>
           <div className="max-w-3xl mx-auto grid gap-6">
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-100 border-2 border-primary">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-100 border-2 border-primary cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowSundayDialog(true)}>
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -537,6 +545,31 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      <Dialog open={showSundayDialog} onOpenChange={setShowSundayDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-primary">Что такое воскресное христианское богослужение</DialogTitle>
+            <DialogDescription className="text-base space-y-4 pt-4">
+              <p>
+                Воскресное богослужение — это особое собрание христиан, которое проходит в церкви по воскресеньям. В этот день верующие приходят вместе, чтобы поклоняться Богу, благодарить Его и укрепляться в вере.
+              </p>
+              <p>
+                Во время богослужения звучит христианская музыка и песни прославления. Музыка помогает людям почувствовать Божье присутствие, выразить радость и благодарность, а также настроиться на молитву.
+              </p>
+              <p>
+                Важной частью служения является общение. Люди приветствуют друг друга, делятся поддержкой, знакомятся и помогают тем, кто нуждается. Это создаёт атмосферу дружбы, любви и единства.
+              </p>
+              <p>
+                Также на богослужении звучит проповедь. Пастор или служитель объясняет Библию, рассказывает, как применять Божье слово в повседневной жизни, и вдохновляет людей жить по христианским ценностям.
+              </p>
+              <p>
+                Воскресное богослужение помогает верующим становиться духовно сильнее, находить мир в сердце и чувствовать себя частью большой христианской семьи.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
