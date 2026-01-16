@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -11,6 +11,26 @@ const Index = () => {
     const element = document.getElementById(section);
     element?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
@@ -99,11 +119,11 @@ const Index = () => {
 
       <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-slide-up">
+          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">
             О нашей церкви
           </h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow">
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-left">
               <CardContent className="p-8">
                 <div className="mb-4">
                   <Icon name="Heart" className="text-primary" size={40} />
@@ -116,7 +136,7 @@ const Index = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow">
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-right delay-200">
               <CardContent className="p-8">
                 <div className="mb-4">
                   <Icon name="Users" className="text-primary" size={40} />
@@ -143,11 +163,11 @@ const Index = () => {
         }}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary">
+          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">
             Расписание богослужений
           </h2>
           <div className="max-w-3xl mx-auto grid gap-6">
-            <Card className="shadow-lg">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-100">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -163,7 +183,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-200">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -179,7 +199,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-300">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -195,7 +215,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-400">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -211,7 +231,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-500">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -227,7 +247,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-100">
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -249,9 +269,9 @@ const Index = () => {
 
       <section id="ministries" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary">Наши служения</h2>
+          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">Наши служения</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-on-scroll animate-fade-up delay-100">
               <CardContent className="p-6 text-center">
                 <div className="mb-4 flex justify-center">
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -264,7 +284,7 @@ const Index = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-on-scroll animate-fade-up delay-200">
               <CardContent className="p-6 text-center">
                 <div className="mb-4 flex justify-center">
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -277,7 +297,7 @@ const Index = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-on-scroll animate-fade-up delay-300">
               <CardContent className="p-6 text-center">
                 <div className="mb-4 flex justify-center">
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
