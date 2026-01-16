@@ -299,7 +299,7 @@ const Index = () => {
                   </div>
                   <div className="flex-grow">
                     <h3 className="text-2xl font-semibold mb-2 text-primary">Вера, движущая горами</h3>
-                    <p className="text-muted-foreground mb-3">Пастор Иван Петров • 14 января 2026</p>
+                    <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 14 января 2026</p>
                     <p className="text-muted-foreground">
                       Исследование силы веры и её влияния на нашу повседневную жизнь
                     </p>
@@ -317,7 +317,7 @@ const Index = () => {
                   </div>
                   <div className="flex-grow">
                     <h3 className="text-2xl font-semibold mb-2 text-primary">Любовь как основа</h3>
-                    <p className="text-muted-foreground mb-3">Пастор Мария Сидорова • 7 января 2026</p>
+                    <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 7 января 2026</p>
                     <p className="text-muted-foreground">
                       Размышления о любви Божьей и как мы можем проявлять её в отношениях
                     </p>
@@ -335,7 +335,7 @@ const Index = () => {
                   </div>
                   <div className="flex-grow">
                     <h3 className="text-2xl font-semibold mb-2 text-primary">Обновление через Духа</h3>
-                    <p className="text-muted-foreground mb-3">Пастор Иван Петров • 31 декабря 2025</p>
+                    <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 31 декабря 2025</p>
                     <p className="text-muted-foreground">
                       Как Святой Дух обновляет нашу жизнь и даёт силу для преодоления трудностей
                     </p>
