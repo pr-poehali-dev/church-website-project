@@ -130,7 +130,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <div className="flex items-center gap-2 text-white">
               <Icon name="MapPin" size={20} />
-              <span className="font-semibold text-lg">Павла Красильникова 109</span>
+              <span className="font-semibold text-lg">Иркутск / Павла Красильникова 109</span>
             </div>
           </div>
           <Button
