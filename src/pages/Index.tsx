@@ -86,29 +86,12 @@ const Index = () => {
             <Icon name="Calendar" className="mr-2" size={20} />
             Посетить служение
           </Button>
-          <div className="mt-20 relative">
+          <div className="mt-16">
             <button
               onClick={() => scrollToSection("about")}
-              className="group flex flex-col items-center gap-3 text-white transition-all relative"
+              className="flex flex-col items-center gap-2 text-white/80 hover:text-white transition-all animate-bounce"
             >
-              <span className="text-xs font-light tracking-[0.2em] uppercase opacity-90 group-hover:opacity-100 transition-opacity">
-                Узнать больше
-              </span>
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-white/30 blur-xl group-hover:bg-white/40 transition-all" />
-                <div className="relative w-14 h-14 rounded-full bg-white/25 backdrop-blur-md border border-white/40 flex items-center justify-center group-hover:bg-white/35 group-hover:border-white/60 transition-all duration-300 group-hover:scale-110 shadow-lg animate-bounce">
-                  <Icon 
-                    name="ChevronDown" 
-                    size={26} 
-                    className="group-hover:translate-y-1 transition-transform duration-300" 
-                  />
-                </div>
-              </div>
-              <div className="flex gap-1 mt-1">
-                <div className="w-1 h-1 rounded-full bg-white/60 animate-pulse" />
-                <div className="w-1 h-1 rounded-full bg-white/40 animate-pulse delay-75" />
-                <div className="w-1 h-1 rounded-full bg-white/20 animate-pulse delay-150" />
-              </div>
+              <Icon name="ChevronDown" size={32} strokeWidth={1.5} />
             </button>
           </div>
         </div>
