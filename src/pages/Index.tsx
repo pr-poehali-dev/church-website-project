@@ -190,9 +190,12 @@ const Index = () => {
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Воскресное служение</h3>
                   <p className="text-lg text-muted-foreground mb-2">Воскресенье, 13:00</p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Основное воскресное богослужение с проповедью, прославлением и общением
                   </p>
+                  <Button variant="outline" size="sm" className="text-primary">
+                    Подробнее
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -206,9 +209,12 @@ const Index = () => {
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Поклонение Богу</h3>
                   <p className="text-lg text-muted-foreground mb-2">Понедельник, 08:00</p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Начинаем неделю с поклонения к Богу
                   </p>
+                  <Button variant="outline" size="sm" className="text-primary">
+                    Подробнее
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -222,9 +228,12 @@ const Index = () => {
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Изучение Библии</h3>
                   <p className="text-lg text-muted-foreground mb-2">Вторник, 08:00 </p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Глубокое изучение Священного Писания в малых группах
                   </p>
+                  <Button variant="outline" size="sm" className="text-primary">
+                    Подробнее
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -238,9 +247,12 @@ const Index = () => {
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Молитвенное собрание</h3>
                   <p className="text-lg text-muted-foreground mb-2">Среда, 19:00 </p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Вечернее молитвенное служение для углубления веры и общения с Богом
                   </p>
+                  <Button variant="outline" size="sm" className="text-primary">
+                    Подробнее
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -254,9 +266,12 @@ const Index = () => {
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Сестринский разговор</h3>
                   <p className="text-lg text-muted-foreground mb-2">Четверг, 19:00</p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Встреча сестер церкви для общения, молитвы и взаимной поддержки
                   </p>
+                  <Button variant="outline" size="sm" className="text-primary">
+                    Подробнее
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -270,9 +285,12 @@ const Index = () => {
                 <div className="flex-grow">
                   <h3 className="text-2xl font-semibold mb-2 text-primary">Братский разговор</h3>
                   <p className="text-lg text-muted-foreground mb-2">Пятница, 19:00</p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Встреча братьев церкви для общения, молитвы и взаимной поддержки
                   </p>
+                  <Button variant="outline" size="sm" className="text-primary">
+                    Подробнее
+                  </Button>
                 </div>
               </CardContent>
             </Card>
