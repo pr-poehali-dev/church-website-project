@@ -86,13 +86,15 @@ const Index = () => {
             <Icon name="Calendar" className="mr-2" size={20} />
             Посетить служение
           </Button>
-          <div className="mt-16 animate-bounce">
+          <div className="mt-16">
             <button
               onClick={() => scrollToSection("about")}
-              className="flex flex-col items-center gap-2 text-white/90 hover:text-white transition-colors"
+              className="group flex flex-col items-center gap-2 text-white/90 hover:text-white transition-all"
             >
-              <span className="text-sm font-light">Узнать больше</span>
-              <Icon name="ChevronDown" size={32} />
+              <span className="text-sm font-light tracking-wider uppercase">Узнать больше</span>
+              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-all group-hover:scale-110 animate-bounce">
+                <Icon name="ChevronDown" size={24} className="group-hover:translate-y-0.5 transition-transform" />
+              </div>
             </button>
           </div>
         </div>
