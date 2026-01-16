@@ -429,9 +429,19 @@ const Index = () => {
                   <div className="flex-grow">
                     <h3 className="text-2xl font-semibold mb-2 text-primary">Вера, движущая горами</h3>
                     <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 14 января 2026</p>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground mb-4">
                       Исследование силы веры и её влияния на нашу повседневную жизнь
                     </p>
+                    <a 
+                      href="https://rutube.ru/video/67904ab1f57a236744674e492b534fea/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      <Button variant="default" size="sm">
+                        <Icon name="PlayCircle" className="mr-2" size={16} />
+                        Смотреть
+                      </Button>
+                    </a>
                   </div>
                 </div>
               </CardContent>
