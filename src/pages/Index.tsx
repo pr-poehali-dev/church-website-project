@@ -13,6 +13,11 @@ import {
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [showSundayDialog, setShowSundayDialog] = useState(false);
+  const [showWorshipDialog, setShowWorshipDialog] = useState(false);
+  const [showBibleDialog, setShowBibleDialog] = useState(false);
+  const [showPrayerDialog, setShowPrayerDialog] = useState(false);
+  const [showSistersDialog, setShowSistersDialog] = useState(false);
+  const [showBrothersDialog, setShowBrothersDialog] = useState(false);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
@@ -191,7 +196,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-200">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-200 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowWorshipDialog(true)}>
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -207,7 +212,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-300">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-300 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowBibleDialog(true)}>
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -223,7 +228,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-400">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-400 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowPrayerDialog(true)}>
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -239,7 +244,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-500">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-500 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowSistersDialog(true)}>
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -255,7 +260,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-100">
+            <Card className="shadow-lg animate-on-scroll animate-scale delay-100 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowBrothersDialog(true)}>
               <CardContent className="p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -565,6 +570,101 @@ const Index = () => {
               </p>
               <p>
                 Воскресное богослужение помогает верующим становиться духовно сильнее, находить мир в сердце и чувствовать себя частью большой христианской семьи.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showWorshipDialog} onOpenChange={setShowWorshipDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-primary">Поклонение Богу</DialogTitle>
+            <DialogDescription className="text-base space-y-4 pt-4">
+              <p>
+                Поклонение Богу — это время, когда верующие собираются вместе, чтобы выразить свою любовь, благодарность и преклонение перед Господом через молитву и песни.
+              </p>
+              <p>
+                Начало недели с поклонения помогает настроить сердце на Божье присутствие, получить силу и мудрость для предстоящих дней.
+              </p>
+              <p>
+                В атмосфере искреннего прославления люди испытывают духовное обновление, находят покой и укрепление в вере.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showBibleDialog} onOpenChange={setShowBibleDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-primary">Изучение Библии</DialogTitle>
+            <DialogDescription className="text-base space-y-4 pt-4">
+              <p>
+                Изучение Библии в малых группах — это возможность глубже понять Священное Писание, обсудить его значение и применение в повседневной жизни.
+              </p>
+              <p>
+                В небольших группах создаётся доверительная атмосфера, где каждый может задать вопросы, поделиться своими размышлениями и получить поддержку.
+              </p>
+              <p>
+                Регулярное изучение Библии помогает верующим расти духовно, укрепляет веру и даёт практические ответы на жизненные вопросы.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showPrayerDialog} onOpenChange={setShowPrayerDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-primary">Молитвенное собрание</DialogTitle>
+            <DialogDescription className="text-base space-y-4 pt-4">
+              <p>
+                Молитвенное собрание — это особое время, когда верующие объединяются в совместной молитве, обращаясь к Богу с благодарностью, просьбами и ходатайством.
+              </p>
+              <p>
+                Вечернее молитвенное служение создаёт пространство для глубокого общения с Богом, где люди могут излить своё сердце и получить утешение.
+              </p>
+              <p>
+                Совместная молитва укрепляет единство церкви, помогает нести бремена друг друга и свидетельствует о силе веры.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showSistersDialog} onOpenChange={setShowSistersDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-primary">Сестринский разговор</DialogTitle>
+            <DialogDescription className="text-base space-y-4 pt-4">
+              <p>
+                Сестринский разговор — это встреча женщин церкви для общения, молитвы и взаимной поддержки в атмосфере доверия и любви.
+              </p>
+              <p>
+                На этих встречах сёстры делятся своим опытом, обсуждают духовные вопросы, учатся друг у друга и растут в вере вместе.
+              </p>
+              <p>
+                Это время помогает женщинам найти понимание, получить мудрый совет и почувствовать себя частью любящей христианской семьи.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showBrothersDialog} onOpenChange={setShowBrothersDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-primary">Братский разговор</DialogTitle>
+            <DialogDescription className="text-base space-y-4 pt-4">
+              <p>
+                Братский разговор — это встреча мужчин церкви для общения, молитвы и взаимной поддержки, где братья укрепляют друг друга в вере.
+              </p>
+              <p>
+                На этих встречах мужчины обсуждают духовные вопросы, делятся жизненным опытом, учатся библейским принципам лидерства и служения.
+              </p>
+              <p>
+                Братское общение помогает мужчинам становиться более зрелыми в вере, развивать характер и быть примером для своих семей и церкви.
               </p>
             </DialogDescription>
           </DialogHeader>
