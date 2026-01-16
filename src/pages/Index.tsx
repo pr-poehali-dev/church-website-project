@@ -427,7 +427,7 @@ const Index = () => {
                     </div>
                   </div>
                   <div className="flex-grow">
-                    <h3 className="text-2xl font-semibold mb-2 text-primary">Вера, движущая горами</h3>
+                    <h3 className="text-2xl font-semibold mb-2 text-primary">Сила Божье Благодати</h3>
                     <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 14 января 2026</p>
                     <p className="text-muted-foreground mb-4">
                       Исследование силы веры и её влияния на нашу повседневную жизнь
