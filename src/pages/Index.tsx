@@ -69,7 +69,7 @@ const Index = () => {
               alt="Церковь Бога Моего" 
               className="h-14 w-14 object-contain rounded-lg shadow-md"
             />
-            <span className="text-xl font-semibold text-primary">Церковь Бога Моего / Иркутск</span>
+            <span className="text-xl font-semibold text-primary">Церковь Бога Моего</span>
           </div>
           <div className="hidden md:flex gap-6">
             {["home", "about", "schedule", "ministries", "sermons", "contacts"].map((section) => (
