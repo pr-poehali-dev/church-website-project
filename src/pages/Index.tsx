@@ -239,6 +239,39 @@ const Index = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-primary animate-on-scroll animate-fade-up">
             О нашей церкви
           </h2>
+          
+          {/* Пастор церкви */}
+          <div className="max-w-4xl mx-auto mb-16 animate-on-scroll animate-fade-up">
+            <Card className="shadow-xl hover:shadow-2xl transition-shadow duration-300 border-primary/20">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center gap-8">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src="https://cdn.poehali.dev/files/фон 5432.PNG" 
+                      alt="Алексей Нарутдинов" 
+                      className="w-48 h-48 md:w-56 md:h-56 object-cover rounded-lg shadow-lg"
+                    />
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <div className="flex flex-col md:flex-row items-center md:items-start gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Icon name="Church" className="text-primary" size={24} />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl md:text-3xl font-bold text-primary">Алексей Нарутдинов</h3>
+                        <p className="text-lg text-foreground font-semibold">Пастор церкви</p>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed text-base">
+                      Служитель Божий, посвятивший свою жизнь проповеди Евангелия и духовному
+                      наставлению общины. С любовью и мудростью ведет церковь по пути веры и служения.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-left">
               <CardContent className="p-6 md:p-8">
