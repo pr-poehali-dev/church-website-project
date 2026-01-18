@@ -600,6 +600,20 @@ const Index = () => {
               </CardContent>
             </Card>
           </div>
+          
+          <div className="max-w-5xl mx-auto mt-12">
+            <Card className="shadow-lg overflow-hidden">
+              <CardContent className="p-0">
+                <iframe
+                  src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A52.28785247802825%2C%22lon%22%3A104.29652214050294%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22irkutsk%22%7D%2C%22org%22%3A%2270000001098974642%22%7D"
+                  width="100%"
+                  height="500"
+                  style={{ border: 0 }}
+                  title="Карта 2ГИС"
+                ></iframe>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
