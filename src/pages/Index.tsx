@@ -157,7 +157,7 @@ const Index = () => {
           <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">
             О нашей церкви
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-left">
               <CardContent className="p-8">
                 <div className="mb-4">
@@ -171,7 +171,7 @@ const Index = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-right delay-200">
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-up delay-100">
               <CardContent className="p-8">
                 <div className="mb-4">
                   <Icon name="Users" className="text-primary" size={40} />
@@ -182,6 +182,21 @@ const Index = () => {
                   В нашей церкви вы найдёте тёплую атмосферу принятия, поддержки и духовного роста
                   в присутствии Господа.
                 </p>
+              </CardContent>
+            </Card>
+            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-right delay-200">
+              <CardContent className="p-8">
+                <div className="mb-4">
+                  <Icon name="HandHeart" className="text-primary" size={40} />
+                </div>
+                <h3 className="text-2xl font-semibold mb-4 text-primary">Центр социальной помощи</h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Если вы находитесь в сложной жизненной ситуации, нет где жить, нужна работа — мы поможем.
+                </p>
+                <a href="tel:+79041269873" className="inline-flex items-center gap-2 text-primary font-semibold hover:underline">
+                  <Icon name="Phone" size={20} />
+                  8 (904) 126-98-73
+                </a>
               </CardContent>
             </Card>
           </div>
