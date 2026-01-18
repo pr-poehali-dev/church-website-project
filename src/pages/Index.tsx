@@ -20,6 +20,22 @@ const Index = () => {
   const [showBrothersDialog, setShowBrothersDialog] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
+  const [currentDay, setCurrentDay] = useState(0);
+
+  const services = [
+    { day: 0, name: 'Воскресное служение', time: 'Воскресенье, 13:00', icon: 'Sun', dialog: () => setShowSundayDialog(true) },
+    { day: 1, name: 'Поклонение Богу', time: 'Понедельник, 08:00', icon: 'Music', dialog: () => setShowWorshipDialog(true) },
+    { day: 2, name: 'Изучение Библии', time: 'Вторник, 08:00', icon: 'BookOpen', dialog: () => setShowBibleDialog(true) },
+    { day: 3, name: 'Молитвенное собрание', time: 'Среда, 19:00', icon: 'Moon', dialog: () => setShowPrayerDialog(true) },
+    { day: 4, name: 'Сестринский разговор', time: 'Четверг, 19:00', icon: 'Users', dialog: () => setShowSistersDialog(true) },
+    { day: 5, name: 'Братский разговор', time: 'Пятница, 19:00', icon: 'Users', dialog: () => setShowBrothersDialog(true) },
+  ];
+
+  const getNextServiceIndex = () => {
+    const today = new Date().getDay();
+    const nextIndex = services.findIndex(service => service.day >= today);
+    return nextIndex === -1 ? 0 : nextIndex;
+  };
 
   const biblicalVerses = [
     {
@@ -53,6 +69,10 @@ const Index = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    setCurrentDay(new Date().getDay());
+  }, []);
 
   useEffect(() => {
     const verseInterval = setInterval(() => {
@@ -266,120 +286,52 @@ const Index = () => {
             Расписание богослужений
           </h2>
           <div className="max-w-3xl mx-auto grid gap-6">
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-100 border-2 border-primary cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowSundayDialog(true)}>
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Sun" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Воскресное служение</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Воскресенье, 13:00</p>
-                  <p className="text-muted-foreground mb-3">
-                    Основное воскресное богослужение с проповедью, прославлением и общением
-                  </p>
-                  <Button variant="outline" size="sm" className="text-primary">
-                    Подробнее
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-200 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowWorshipDialog(true)}>
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Music" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Поклонение Богу</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Понедельник, 08:00</p>
-                  <p className="text-muted-foreground mb-3">
-                    Начинаем неделю с поклонения к Богу
-                  </p>
-                  <Button variant="outline" size="sm" className="text-primary">
-                    Подробнее
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-300 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowBibleDialog(true)}>
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="BookOpen" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Изучение Библии</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Вторник, 08:00 </p>
-                  <p className="text-muted-foreground mb-3">
-                    Глубокое изучение Священного Писания в малых группах
-                  </p>
-                  <Button variant="outline" size="sm" className="text-primary">
-                    Подробнее
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-400 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowPrayerDialog(true)}>
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Moon" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Молитвенное собрание</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Среда, 19:00 </p>
-                  <p className="text-muted-foreground mb-3">
-                    Вечернее молитвенное служение для углубления веры и общения с Богом
-                  </p>
-                  <Button variant="outline" size="sm" className="text-primary">
-                    Подробнее
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-500 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowSistersDialog(true)}>
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Users" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Сестринский разговор</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Четверг, 19:00</p>
-                  <p className="text-muted-foreground mb-3">
-                    Встреча сестер церкви для общения, молитвы и взаимной поддержки
-                  </p>
-                  <Button variant="outline" size="sm" className="text-primary">
-                    Подробнее
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg animate-on-scroll animate-scale delay-100 cursor-pointer hover:shadow-xl transition-shadow" onClick={() => setShowBrothersDialog(true)}>
-              <CardContent className="p-8 flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Users" className="text-primary" size={28} />
-                  </div>
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold mb-2 text-primary">Братский разговор</h3>
-                  <p className="text-lg text-muted-foreground mb-2">Пятница, 19:00</p>
-                  <p className="text-muted-foreground mb-3">
-                    Встреча братьев церкви для общения, молитвы и взаимной поддержки
-                  </p>
-                  <Button variant="outline" size="sm" className="text-primary">
-                    Подробнее
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {services.map((service, index) => {
+              const nextServiceIndex = getNextServiceIndex();
+              const isNext = index === nextServiceIndex;
+              const isToday = service.day === currentDay;
+              
+              return (
+                <Card 
+                  key={index}
+                  className={`shadow-lg animate-on-scroll animate-scale cursor-pointer hover:shadow-xl transition-all ${
+                    isNext ? 'border-2 border-primary bg-primary/5' : ''
+                  } ${
+                    isToday ? 'ring-2 ring-primary/50' : ''
+                  }`}
+                  onClick={service.dialog}
+                >
+                  <CardContent className="p-8 flex items-start gap-6">
+                    <div className="flex-shrink-0">
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                        isNext ? 'bg-primary text-white' : 'bg-primary/10'
+                      }`}>
+                        <Icon name={service.icon as any} className={isNext ? 'text-white' : 'text-primary'} size={28} />
+                      </div>
+                    </div>
+                    <div className="flex-grow">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-2xl font-semibold text-primary">{service.name}</h3>
+                        {isNext && (
+                          <span className="px-2 py-1 bg-primary text-white text-xs font-semibold rounded-full">
+                            Следующее
+                          </span>
+                        )}
+                        {isToday && (
+                          <span className="px-2 py-1 bg-accent text-foreground text-xs font-semibold rounded-full">
+                            Сегодня
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-lg text-muted-foreground mb-2">{service.time}</p>
+                      <Button variant="outline" size="sm" className="text-primary mt-2">
+                        Подробнее
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
