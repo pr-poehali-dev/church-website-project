@@ -33,8 +33,11 @@ const Index = () => {
 
   const getNextServiceIndex = () => {
     const today = new Date().getDay();
-    const nextIndex = services.findIndex(service => service.day >= today);
-    return nextIndex === -1 ? 0 : nextIndex;
+    let nextIndex = services.findIndex(service => service.day > today);
+    if (nextIndex === -1) {
+      nextIndex = 0;
+    }
+    return nextIndex;
   };
 
   const biblicalVerses = [
@@ -295,31 +298,31 @@ const Index = () => {
                 <Card 
                   key={index}
                   className={`shadow-lg animate-on-scroll animate-scale cursor-pointer hover:shadow-xl transition-all ${
-                    isNext ? 'border-2 border-primary bg-primary/5' : ''
+                    isToday ? 'border-2 border-accent bg-accent/10 ring-2 ring-accent/50' : ''
                   } ${
-                    isToday ? 'ring-2 ring-primary/50' : ''
+                    isNext && !isToday ? 'border-2 border-primary bg-primary/5' : ''
                   }`}
                   onClick={service.dialog}
                 >
                   <CardContent className="p-8 flex items-start gap-6">
                     <div className="flex-shrink-0">
                       <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                        isNext ? 'bg-primary text-white' : 'bg-primary/10'
+                        isToday ? 'bg-accent text-white' : isNext ? 'bg-primary text-white' : 'bg-primary/10'
                       }`}>
-                        <Icon name={service.icon as any} className={isNext ? 'text-white' : 'text-primary'} size={28} />
+                        <Icon name={service.icon as any} className={isToday || isNext ? 'text-white' : 'text-primary'} size={28} />
                       </div>
                     </div>
                     <div className="flex-grow">
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="text-2xl font-semibold text-primary">{service.name}</h3>
-                        {isNext && (
-                          <span className="px-2 py-1 bg-primary text-white text-xs font-semibold rounded-full">
-                            Следующее
+                        {isToday && (
+                          <span className="px-3 py-1 bg-accent text-white text-sm font-semibold rounded-full animate-pulse">
+                            Сегодня
                           </span>
                         )}
-                        {isToday && (
-                          <span className="px-2 py-1 bg-accent text-foreground text-xs font-semibold rounded-full">
-                            Сегодня
+                        {isNext && !isToday && (
+                          <span className="px-3 py-1 bg-primary text-white text-sm font-semibold rounded-full">
+                            Следующее
                           </span>
                         )}
                       </div>
