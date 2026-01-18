@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -22,6 +23,9 @@ const Index = () => {
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentDay, setCurrentDay] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const services = [
     { day: 0, name: 'Воскресное служение', time: 'Воскресенье, 13:00', icon: 'Sun', dialog: () => setShowSundayDialog(true) },
@@ -130,7 +134,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-[100]"
+        style={{ scaleX: scrollYProgress }}
+      />
+      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 transition-all duration-300 mt-1">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
@@ -197,25 +205,49 @@ const Index = () => {
         id="home"
         className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
       >
-        <div
+        <motion.div
           className="absolute inset-0 z-0"
           style={{
             backgroundImage: `url('https://cdn.poehali.dev/files/фон 56.JPEG')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            y: y,
           }}
         />
-        <div className="container mx-auto px-4 z-10 text-center animate-fade-in">
-          <div className="mb-6 inline-block">
+        <motion.div 
+          className="container mx-auto px-4 z-10 text-center"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          style={{ opacity }}
+          <motion.div 
+            className="mb-6 inline-block"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ 
+              scale: 1, 
+              rotate: 0,
+              y: [0, -10, 0]
+            }}
+            transition={{ 
+              scale: { type: "spring", duration: 1.5, delay: 0.2 },
+              rotate: { type: "spring", duration: 1.5, delay: 0.2 },
+              y: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }
+            }}
+          >
             <img 
               src="https://cdn.poehali.dev/files/фон 72.PNG" 
               alt="Церковь Бога Моего" 
               className="w-32 h-32 md:w-40 md:h-40 object-contain mx-auto drop-shadow-2xl"
             />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg px-4">
+          </motion.div>
+          <motion.h1 
+            className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg px-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             Церковь Бога Моего
-          </h1>
+          </motion.h1>
           <div className="relative h-40 md:h-32 overflow-hidden max-w-3xl mx-auto px-4">
             {biblicalVerses.map((verse, index) => (
               <div
@@ -241,14 +273,22 @@ const Index = () => {
               <span className="font-semibold text-base md:text-lg">Иркутск / Павла Красильникова 109</span>
             </div>
           </div>
-          <Button
-            size="lg"
-            className="bg-accent hover:bg-accent/90 text-foreground font-semibold text-lg px-8 py-6 shadow-xl"
-            onClick={() => scrollToSection("schedule")}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Icon name="Calendar" className="mr-2" size={20} />
-            Посетить служение
-          </Button>
+            <Button
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-foreground font-semibold text-lg px-8 py-6 shadow-xl"
+              onClick={() => scrollToSection("schedule")}
+            >
+              <Icon name="Calendar" className="mr-2" size={20} />
+              Посетить служение
+            </Button>
+          </motion.div>
           <div className="mt-16">
             <button
               onClick={() => scrollToSection("about")}
@@ -257,7 +297,7 @@ const Index = () => {
               <Icon name="ChevronDown" size={32} strokeWidth={1.5} />
             </button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <section id="about" className="py-12 md:py-20 bg-white">
@@ -267,8 +307,18 @@ const Index = () => {
           </h2>
           
           {/* Пастор церкви */}
-          <div className="max-w-4xl mx-auto mb-16 animate-on-scroll animate-fade-up">
-            <Card className="shadow-xl hover:shadow-2xl transition-shadow duration-300 border-primary/20">
+          <motion.div 
+            className="max-w-4xl mx-auto mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div
+              whileHover={{ scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="shadow-xl border-primary/20">
               <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-shrink-0">
@@ -296,10 +346,18 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-left">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.15)" }} transition={{ duration: 0.3 }}>
+                <Card className="border-primary/20 shadow-lg h-full">
               <CardContent className="p-6 md:p-8">
                 <div className="mb-4">
                   <Icon name="Heart" className="text-primary" size={32} />
@@ -311,8 +369,17 @@ const Index = () => {
                   место, где каждый может встретиться с живым Богом.
                 </p>
               </CardContent>
-            </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-up delay-100">
+                </Card>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <motion.div whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.15)" }} transition={{ duration: 0.3 }}>
+                <Card className="border-primary/20 shadow-lg h-full">
               <CardContent className="p-6 md:p-8">
                 <div className="mb-4">
                   <Icon name="Users" className="text-primary" size={32} />
@@ -324,8 +391,17 @@ const Index = () => {
                   в присутствии Господа.
                 </p>
               </CardContent>
-            </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-right delay-200">
+                </Card>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <motion.div whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.15)" }} transition={{ duration: 0.3 }}>
+                <Card className="border-primary/20 shadow-lg h-full">
               <CardContent className="p-6 md:p-8">
                 <div className="mb-4">
                   <Icon name="HandHeart" className="text-primary" size={32} />
@@ -339,7 +415,9 @@ const Index = () => {
                   8 (904) 126-98-73
                 </a>
               </CardContent>
-            </Card>
+                </Card>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -364,9 +442,17 @@ const Index = () => {
               const isToday = service.day === currentDay;
               
               return (
-                <Card 
+                <motion.div
                   key={index}
-                  className={`shadow-lg animate-on-scroll animate-scale cursor-pointer hover:shadow-xl transition-all ${
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Card 
+                  className={`shadow-lg cursor-pointer transition-all ${
                     isToday ? 'border-2 border-accent bg-accent/10 ring-2 ring-accent/50' : ''
                   } ${
                     isNext && !isToday ? 'border-2 border-primary bg-primary/5' : ''
@@ -402,6 +488,7 @@ const Index = () => {
                     </div>
                   </CardContent>
                 </Card>
+                </motion.div>
               );
             })}
           </div>
@@ -412,71 +499,45 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">Наши служения</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-on-scroll animate-fade-up delay-100">
-              <CardContent className="p-6 text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Music" className="text-primary" size={32} />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-primary">Прославление</h3>
-                <p className="text-muted-foreground">
-                  Музыкальное служение, воспевающее славу Богу через современные и традиционные гимны
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-on-scroll animate-fade-up delay-200">
-              <CardContent className="p-6 text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Baby" className="text-primary" size={32} />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-primary">Детское служение</h3>
-                <p className="text-muted-foreground">
-                  Воскресная школа для детей с библейскими уроками, играми и творчеством
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-on-scroll animate-fade-up delay-300">
-              <CardContent className="p-6 text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Sparkles" className="text-primary" size={32} />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-primary">Молодёжное служение</h3>
-                <p className="text-muted-foreground">
-                  Встречи молодёжи для общения, духовного роста и совместного служения
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <CardContent className="p-6 text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="HandHeart" className="text-primary" size={32} />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-primary">Милосердие</h3>
-                <p className="text-muted-foreground">
-                  Помощь нуждающимся, социальное служение и благотворительность
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <CardContent className="p-6 text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Users2" className="text-primary" size={32} />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-primary">Малые группы</h3>
-                <p className="text-muted-foreground">
-                  Домашние группы для близкого общения, изучения Библии и взаимной поддержки
-                </p>
-              </CardContent>
-            </Card>
+            {[
+              { icon: 'Music', title: 'Прославление', desc: 'Музыкальное служение, воспевающее славу Богу через современные и традиционные гимны', delay: 0 },
+              { icon: 'Baby', title: 'Детское служение', desc: 'Воскресная школа для детей с библейскими уроками, играми и творчеством', delay: 0.1 },
+              { icon: 'Sparkles', title: 'Молодёжное служение', desc: 'Встречи молодёжи для общения, духовного роста и совместного служения', delay: 0.2 },
+              { icon: 'HandHeart', title: 'Милосердие', desc: 'Помощь нуждающимся, социальное служение и благотворительность', delay: 0.3 },
+              { icon: 'Users2', title: 'Малые группы', desc: 'Домашние группы для близкого общения, изучения Библии и взаимной поддержки', delay: 0.4 },
+              { icon: 'Heart', title: 'Семейное служение', desc: 'Поддержка семей, консультирование и совместные мероприятия для укрепления отношений', delay: 0.5 },
+            ].map((ministry, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: ministry.delay }}
+              >
+                <motion.div
+                  whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)" }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="border-primary/20 shadow-lg h-full">
+                    <CardContent className="p-6 text-center">
+                      <motion.div 
+                        className="mb-4 flex justify-center"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Icon name={ministry.icon as any} className="text-primary" size={32} />
+                        </div>
+                      </motion.div>
+                      <h3 className="text-xl font-semibold mb-3 text-primary">{ministry.title}</h3>
+                      <p className="text-muted-foreground">
+                        {ministry.desc}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </motion.div>
+            ))}
             <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
               <CardContent className="p-6 text-center">
                 <div className="mb-4 flex justify-center">
@@ -506,8 +567,15 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-primary">Проповеди</h2>
           <div className="max-w-4xl mx-auto grid gap-6">
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardContent className="p-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <Card className="shadow-lg">
+                <CardContent className="p-8">
                 <div className="flex items-start gap-6">
                   <div className="flex-shrink-0">
                     <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -532,6 +600,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -782,13 +851,19 @@ const Index = () => {
       </Dialog>
 
       {showScrollTop && (
-        <button
+        <motion.button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary/90 transition-all z-50 animate-fade-in"
+          className="fixed bottom-8 right-8 bg-primary text-white p-4 rounded-full shadow-lg z-50"
           aria-label="Наверх"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          whileHover={{ scale: 1.1, boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)" }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ duration: 0.3 }}
         >
           <Icon name="ArrowUp" size={24} />
-        </button>
+        </motion.button>
       )}
     </div>
   );
