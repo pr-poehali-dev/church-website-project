@@ -174,12 +174,11 @@ const Index = () => {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `linear-gradient(rgba(210, 230, 245, 0.15), rgba(180, 210, 235, 0.15)), url('https://cdn.poehali.dev/files/фон 56.JPEG')`,
+            backgroundImage: `url('https://cdn.poehali.dev/files/фон 56.JPEG')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-blue-50/30 via-transparent to-blue-100/30" />
         <div className="container mx-auto px-4 z-10 text-center animate-fade-in">
           <div className="mb-6 inline-block">
             <img 
@@ -235,7 +234,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="about" className="py-12 md:py-20 bg-gradient-to-b from-blue-50/50 to-slate-100/50">
+      <section id="about" className="py-12 md:py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-primary animate-on-scroll animate-fade-up">
             О нашей церкви
@@ -290,7 +289,7 @@ const Index = () => {
         id="schedule"
         className="py-12 md:py-20 relative"
         style={{
-          backgroundImage: `linear-gradient(rgba(240, 248, 255, 0.92), rgba(235, 245, 255, 0.92)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/f916dc69-76a7-4102-b24c-969c6df2d668.jpg')`,
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/f916dc69-76a7-4102-b24c-969c6df2d668.jpg')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -350,7 +349,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="ministries" className="py-20 bg-gradient-to-b from-slate-50 to-blue-50/40">
+      <section id="ministries" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">Наши служения</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -440,7 +439,7 @@ const Index = () => {
         id="sermons"
         className="py-20 relative"
         style={{
-          backgroundImage: `linear-gradient(rgba(235, 245, 255, 0.93), rgba(220, 235, 250, 0.93)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/97d663b3-d65b-4555-9e8d-b0440c16c7ab.jpg')`,
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/97d663b3-d65b-4555-9e8d-b0440c16c7ab.jpg')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -478,7 +477,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="contacts" className="py-20 bg-gradient-to-b from-blue-50/30 to-slate-50">
+      <section id="contacts" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-primary">Контакты</h2>
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
