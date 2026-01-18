@@ -220,6 +220,7 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           style={{ opacity }}
+        >
           <motion.div 
             className="mb-6 inline-block"
             initial={{ scale: 0, rotate: -180 }}
