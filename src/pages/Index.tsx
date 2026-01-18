@@ -21,6 +21,7 @@ const Index = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentDay, setCurrentDay] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const services = [
     { day: 0, name: 'Воскресное служение', time: 'Воскресенье, 13:00', icon: 'Sun', dialog: () => setShowSundayDialog(true) },
@@ -65,6 +66,7 @@ const Index = () => {
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
+    setMobileMenuOpen(false);
     const element = document.getElementById(section);
     element?.scrollIntoView({ behavior: "smooth" });
   };
@@ -160,11 +162,35 @@ const Index = () => {
             variant="ghost"
             size="icon"
             className="md:hidden"
-            onClick={() => setActiveSection("home")}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            <Icon name="Menu" size={24} />
+            <Icon name={mobileMenuOpen ? "X" : "Menu"} size={24} />
           </Button>
         </div>
+        
+        {/* Мобильное меню */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-border">
+            <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
+              {["home", "about", "schedule", "ministries", "sermons", "contacts"].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`text-left text-base font-medium transition-colors hover:text-primary py-2 ${
+                    activeSection === section ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  {section === "home" && "Главная"}
+                  {section === "about" && "О церкви"}
+                  {section === "schedule" && "Расписание"}
+                  {section === "ministries" && "Служения"}
+                  {section === "sermons" && "Проповеди"}
+                  {section === "contacts" && "Контакты"}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       <section
