@@ -19,6 +19,30 @@ const Index = () => {
   const [showSistersDialog, setShowSistersDialog] = useState(false);
   const [showBrothersDialog, setShowBrothersDialog] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
+
+  const biblicalVerses = [
+    {
+      text: "«Возложи на Господа заботы твои, и Он поддержит тебя»",
+      reference: "Псалом 54:23"
+    },
+    {
+      text: "«Ибо все возможно верующему»",
+      reference: "Марк 9:23"
+    },
+    {
+      text: "«Господь — Пастырь мой; я ни в чем не буду нуждаться»",
+      reference: "Псалом 22:1"
+    },
+    {
+      text: "«Бог есть любовь, и пребывающий в любви пребывает в Боге»",
+      reference: "1 Иоанна 4:16"
+    },
+    {
+      text: "«Все могу в укрепляющем меня Иисусе Христе»",
+      reference: "Филиппийцам 4:13"
+    }
+  ];
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
@@ -29,6 +53,16 @@ const Index = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const verseInterval = setInterval(() => {
+      setCurrentVerseIndex((prevIndex) => 
+        (prevIndex + 1) % biblicalVerses.length
+      );
+    }, 5000);
+
+    return () => clearInterval(verseInterval);
+  }, [biblicalVerses.length]);
 
   useEffect(() => {
     const observerOptions = {
@@ -123,10 +157,25 @@ const Index = () => {
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
             Церковь Бога Моего
           </h1>
-          <p className="text-xl md:text-2xl text-white/95 mb-4 max-w-2xl mx-auto font-light">
-            «Возложи на Господа заботы твои, и Он поддержит тебя»
-          </p>
-          <p className="text-lg text-white/90 mb-8">Псалом 54:23</p>
+          <div className="relative h-32 overflow-hidden max-w-3xl mx-auto">
+            {biblicalVerses.map((verse, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  index === currentVerseIndex
+                    ? 'opacity-100 translate-y-0'
+                    : index < currentVerseIndex
+                    ? 'opacity-0 -translate-y-full'
+                    : 'opacity-0 translate-y-full'
+                }`}
+              >
+                <p className="text-xl md:text-2xl text-white/95 mb-4 font-light">
+                  {verse.text}
+                </p>
+                <p className="text-lg text-white/90">{verse.reference}</p>
+              </div>
+            ))}
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <div className="flex items-center gap-2 text-white">
               <Icon name="MapPin" size={20} />
