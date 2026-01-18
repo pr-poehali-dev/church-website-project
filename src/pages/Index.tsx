@@ -74,7 +74,17 @@ const Index = () => {
   };
 
   useEffect(() => {
-    setCurrentDay(new Date().getDay());
+    const updateIrkutskTime = () => {
+      const now = new Date();
+      const irkutskTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Irkutsk' }));
+      setCurrentDay(irkutskTime.getDay());
+    };
+
+    updateIrkutskTime();
+    
+    const interval = setInterval(updateIrkutskTime, 60000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
