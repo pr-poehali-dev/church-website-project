@@ -654,30 +654,7 @@ const Index = () => {
             <h3 className="text-2xl font-semibold mb-2">Церковь Бога Моего</h3>
             <p className="text-white/80">Павла Красильникова 109</p>
           </div>
-          <div className="flex justify-center gap-6 mb-6">
-            <a 
-              href="https://vk.com/church_irkutsk" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="ВКонтакте"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.39 14.66h-1.48c-.63 0-.82-.5-1.95-1.63-1.02-1-1.48-1.13-1.74-1.13-.35 0-.45.1-.45.6v1.49c0 .4-.13.64-1.18.64-1.75 0-3.69-1.06-5.06-3.03-2.06-2.97-2.63-5.21-2.63-5.66 0-.26.1-.5.6-.5h1.48c.45 0 .62.2.79.69.89 2.55 2.38 4.78 2.98 4.78.23 0 .33-.11.33-.7v-2.75c-.07-1.19-.69-1.29-.69-1.72 0-.21.17-.42.45-.42h2.32c.38 0 .52.2.52.65v3.71c0 .38.17.52.28.52.23 0 .42-.14.85-.57 1.31-1.47 2.25-3.74 2.25-3.74.12-.26.32-.5.77-.5h1.48c.54 0 .66.28.54.65-.21.99-2.37 4.06-2.37 4.06-.19.31-.26.45 0 .8.19.26.82.8 1.24 1.29.77.88 1.37 1.62 1.53 2.13.16.52-.08.78-.6.78z"/>
-              </svg>
-            </a>
-            <a 
-              href="https://rutube.ru/channel/25481107/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="Rutube"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-              </svg>
-            </a>
-          </div>
+
           <p className="text-white/60 text-sm">
             © 2026 Церковь Бога Моего. Все права защищены.
           </p>
