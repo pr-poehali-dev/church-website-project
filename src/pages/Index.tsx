@@ -187,10 +187,10 @@ const Index = () => {
               className="w-32 h-32 md:w-40 md:h-40 object-contain mx-auto drop-shadow-2xl"
             />
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg px-4">
             Церковь Бога Моего
           </h1>
-          <div className="relative h-32 overflow-hidden max-w-3xl mx-auto">
+          <div className="relative h-40 md:h-32 overflow-hidden max-w-3xl mx-auto px-4">
             {biblicalVerses.map((verse, index) => (
               <div
                 key={index}
@@ -202,17 +202,17 @@ const Index = () => {
                     : 'opacity-0 translate-y-full'
                 }`}
               >
-                <p className="text-xl md:text-2xl text-white/95 mb-4 font-light">
+                <p className="text-lg md:text-2xl text-white/95 mb-4 font-light px-2">
                   {verse.text}
                 </p>
-                <p className="text-lg text-white/90">{verse.reference}</p>
+                <p className="text-base md:text-lg text-white/90">{verse.reference}</p>
               </div>
             ))}
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <div className="flex items-center gap-2 text-white">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 px-4">
+            <div className="flex items-center gap-2 text-white text-center">
               <Icon name="MapPin" size={20} />
-              <span className="font-semibold text-lg">Иркутск / Павла Красильникова 109</span>
+              <span className="font-semibold text-base md:text-lg">Иркутск / Павла Красильникова 109</span>
             </div>
           </div>
           <Button
@@ -234,19 +234,19 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="about" className="py-20 bg-white">
+      <section id="about" className="py-12 md:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-primary animate-on-scroll animate-fade-up">
             О нашей церкви
           </h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-left">
-              <CardContent className="p-8">
+              <CardContent className="p-6 md:p-8">
                 <div className="mb-4">
-                  <Icon name="Heart" className="text-primary" size={40} />
+                  <Icon name="Heart" className="text-primary" size={32} />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4 text-primary">Наша миссия</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-primary">Наша миссия</h3>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                   Мы стремимся быть светом в этом мире, распространяя любовь Божью и помогая
                   людям найти истинный путь к спасению через Иисуса Христа. Наша церковь — это
                   место, где каждый может встретиться с живым Богом.
@@ -254,12 +254,12 @@ const Index = () => {
               </CardContent>
             </Card>
             <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-up delay-100">
-              <CardContent className="p-8">
+              <CardContent className="p-6 md:p-8">
                 <div className="mb-4">
-                  <Icon name="Users" className="text-primary" size={40} />
+                  <Icon name="Users" className="text-primary" size={32} />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4 text-primary">Наше сообщество</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-primary">Наше сообщество</h3>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                   Мы — семья верующих людей разных возрастов и культур, объединённых одной верой.
                   В нашей церкви вы найдёте тёплую атмосферу принятия, поддержки и духовного роста
                   в присутствии Господа.
@@ -267,16 +267,16 @@ const Index = () => {
               </CardContent>
             </Card>
             <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-shadow animate-on-scroll animate-fade-right delay-200">
-              <CardContent className="p-8">
+              <CardContent className="p-6 md:p-8">
                 <div className="mb-4">
-                  <Icon name="HandHeart" className="text-primary" size={40} />
+                  <Icon name="HandHeart" className="text-primary" size={32} />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4 text-primary">Центр социальной помощи</h3>
-                <p className="text-muted-foreground leading-relaxed mb-4">
+                <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-primary">Центр социальной помощи</h3>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-4">
                   Если вы находитесь в сложной жизненной ситуации, нет где жить, нужна работа — мы поможем.
                 </p>
-                <a href="tel:+79041269873" className="inline-flex items-center gap-2 text-primary font-semibold hover:underline">
-                  <Icon name="Phone" size={20} />
+                <a href="tel:+79041269873" className="inline-flex items-center gap-2 text-primary font-semibold hover:underline text-sm md:text-base">
+                  <Icon name="Phone" size={18} />
                   8 (904) 126-98-73
                 </a>
               </CardContent>
@@ -287,7 +287,7 @@ const Index = () => {
 
       <section
         id="schedule"
-        className="py-20 relative"
+        className="py-12 md:py-20 relative"
         style={{
           backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/f916dc69-76a7-4102-b24c-969c6df2d668.jpg')`,
           backgroundSize: "cover",
@@ -295,7 +295,7 @@ const Index = () => {
         }}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-primary animate-on-scroll animate-fade-up">
             Расписание богослужений
           </h2>
           <div className="max-w-3xl mx-auto grid gap-6">
@@ -314,17 +314,17 @@ const Index = () => {
                   }`}
                   onClick={service.dialog}
                 >
-                  <CardContent className="p-8 flex items-start gap-6">
+                  <CardContent className="p-4 md:p-8 flex items-start gap-4 md:gap-6">
                     <div className="flex-shrink-0">
-                      <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                      <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center ${
                         isToday ? 'bg-accent text-white' : isNext ? 'bg-primary text-white' : 'bg-primary/10'
                       }`}>
-                        <Icon name={service.icon as any} className={isToday || isNext ? 'text-white' : 'text-primary'} size={28} />
+                        <Icon name={service.icon as any} className={isToday || isNext ? 'text-white' : 'text-primary'} size={24} />
                       </div>
                     </div>
                     <div className="flex-grow">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-2xl font-semibold text-primary">{service.name}</h3>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                        <h3 className="text-xl md:text-2xl font-semibold text-primary">{service.name}</h3>
                         {isToday && (
                           <span className="px-3 py-1 bg-accent text-white text-sm font-semibold rounded-full animate-pulse">
                             Сегодня
@@ -336,7 +336,7 @@ const Index = () => {
                           </span>
                         )}
                       </div>
-                      <p className="text-lg text-muted-foreground mb-2">{service.time}</p>
+                      <p className="text-base md:text-lg text-muted-foreground mb-2">{service.time}</p>
                       <Button variant="outline" size="sm" className="text-primary mt-2">
                         Подробнее
                       </Button>
