@@ -59,8 +59,8 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const soundUrls = [
-    "https://cdn.freesound.org/previews/413/413897_5121236-lq.mp3",
-    "https://cdn.freesound.org/previews/416/416967_5121236-lq.mp3",
+    "https://www.soundjay.com/nature/sounds/forest-1.mp3",
+    "https://www.soundjay.com/nature/sounds/rain-01.mp3",
     ""
   ];
 
