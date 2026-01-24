@@ -55,24 +55,34 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   const [reflection] = useState(() => reflections[Math.floor(Math.random() * reflections.length)]);
   const [breatheScale, setBreatheScale] = useState(1);
   const [selectedSound, setSelectedSound] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const playSound = () => {
-    const soundUrls = [
-      "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-      "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
-      ""
-    ];
+  const soundUrls = [
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
+    "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
+    ""
+  ];
 
-    if (soundUrls[selectedSound] && !isMuted) {
+  const toggleAudio = () => {
+    if (!audioEnabled) {
+      if (soundUrls[selectedSound]) {
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+        audioRef.current = new Audio(soundUrls[selectedSound]);
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.3;
+        audioRef.current.play()
+          .then(() => setAudioEnabled(true))
+          .catch(err => console.log("Audio error:", err));
+      }
+    } else {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current = null;
       }
-      audioRef.current = new Audio(soundUrls[selectedSound]);
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.3;
-      audioRef.current.play().catch(err => console.log("Audio error:", err));
+      setAudioEnabled(false);
     }
   };
 
@@ -81,26 +91,10 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
       const timer = setTimeout(() => {
         setStage("silence");
         setTimeLeft(DURATION);
-        
-        const soundUrls = [
-          "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-          "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
-          ""
-        ];
-
-        if (soundUrls[selectedSound] && !isMuted) {
-          if (audioRef.current) {
-            audioRef.current.pause();
-          }
-          audioRef.current = new Audio(soundUrls[selectedSound]);
-          audioRef.current.loop = true;
-          audioRef.current.volume = 0.3;
-          audioRef.current.play().catch(err => console.log("Audio error:", err));
-        }
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [stage, selectedSound, isMuted]);
+  }, [stage]);
 
   useEffect(() => {
     if (stage === "silence") {
@@ -309,24 +303,36 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
               {breatheScale === 1 ? "Вдох..." : "Выдох..."}
             </motion.p>
 
-            <motion.button
-              onClick={() => {
-                const newMuted = !isMuted;
-                setIsMuted(newMuted);
-                if (audioRef.current) {
-                  if (newMuted) {
-                    audioRef.current.pause();
-                  } else {
-                    audioRef.current.play().catch(err => console.log("Play error:", err));
+            {selectedSound !== 2 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 }}
+                className="flex flex-col items-center gap-3"
+              >
+                <Button
+                  onClick={toggleAudio}
+                  variant={audioEnabled ? "outline" : "default"}
+                  className={audioEnabled 
+                    ? "bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm"
+                    : "bg-white/20 hover:bg-white/30 text-white border-white/40 backdrop-blur-sm"
                   }
-                }
-              }}
-              className="text-white/40 hover:text-white/60 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Icon name={isMuted ? "VolumeX" : "Volume2"} size={24} />
-            </motion.button>
+                >
+                  <Icon name={audioEnabled ? "Volume2" : "VolumeX"} className="mr-2" size={20} />
+                  {audioEnabled ? "Выключить звук" : "Включить звук"}
+                </Button>
+                
+                {audioEnabled && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.5 }}
+                    className="text-white/50 text-xs font-light"
+                  >
+                    {ambientSounds[selectedSound].emoji} {ambientSounds[selectedSound].name}
+                  </motion.p>
+                )}
+              </motion.div>
+            )}
           </motion.div>
         )}
 
