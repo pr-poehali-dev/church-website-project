@@ -59,8 +59,8 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const soundUrls = [
-    "https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg",
-    "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/music/race2.ogg",
+    "https://cdn.freesound.org/previews/413/413897_5121236-lq.mp3",
+    "https://cdn.freesound.org/previews/416/416967_5121236-lq.mp3",
     ""
   ];
 
