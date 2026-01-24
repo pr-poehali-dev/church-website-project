@@ -59,27 +59,30 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const soundUrls = [
-    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-    "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
+    "https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg",
+    "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/music/race2.ogg",
     ""
   ];
 
   const toggleAudio = () => {
-    if (!audioEnabled) {
-      if (soundUrls[selectedSound]) {
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
-        audioRef.current = new Audio(soundUrls[selectedSound]);
-        audioRef.current.loop = true;
-        audioRef.current.volume = 0.3;
-        audioRef.current.play()
-          .then(() => setAudioEnabled(true))
-          .catch(err => console.log("Audio error:", err));
-      }
-    } else {
+    if (!audioEnabled && selectedSound < 2) {
+      const audio = new Audio(soundUrls[selectedSound]);
+      audio.loop = true;
+      audio.volume = 0.4;
+      
+      audio.play()
+        .then(() => {
+          audioRef.current = audio;
+          setAudioEnabled(true);
+        })
+        .catch(err => {
+          console.error("Audio playback failed:", err);
+          alert("Не удалось воспроизвести звук. Попробуйте ещё раз.");
+        });
+    } else if (audioEnabled) {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0;
         audioRef.current = null;
       }
       setAudioEnabled(false);
@@ -138,8 +141,10 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
     if (stage === "reflection" || stage === "complete") {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0;
         audioRef.current = null;
       }
+      setAudioEnabled(false);
     }
   }, [stage]);
 
@@ -303,36 +308,62 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
               {breatheScale === 1 ? "Вдох..." : "Выдох..."}
             </motion.p>
 
-            {selectedSound !== 2 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
-                className="flex flex-col items-center gap-3"
-              >
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 }}
+              className="flex flex-col items-center gap-4"
+            >
+              <div className="flex gap-2">
+                {ambientSounds.map((sound, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current = null;
+                      }
+                      setSelectedSound(index);
+                      setAudioEnabled(false);
+                    }}
+                    className={`px-4 py-2 rounded-full backdrop-blur-sm transition-all text-sm ${
+                      selectedSound === index
+                        ? "bg-white/25 text-white scale-105 shadow-lg"
+                        : "bg-white/10 text-white/70 hover:bg-white/15"
+                    }`}
+                  >
+                    <span className="mr-1">{sound.emoji}</span>
+                    <span className="font-light">{sound.name}</span>
+                  </button>
+                ))}
+              </div>
+
+              {selectedSound !== 2 && (
                 <Button
                   onClick={toggleAudio}
+                  size="lg"
                   variant={audioEnabled ? "outline" : "default"}
                   className={audioEnabled 
-                    ? "bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm"
-                    : "bg-white/20 hover:bg-white/30 text-white border-white/40 backdrop-blur-sm"
+                    ? "bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm shadow-xl"
+                    : "bg-white/20 hover:bg-white/30 text-white border-white/40 backdrop-blur-sm shadow-xl"
                   }
                 >
                   <Icon name={audioEnabled ? "Volume2" : "VolumeX"} className="mr-2" size={20} />
                   {audioEnabled ? "Выключить звук" : "Включить звук"}
                 </Button>
-                
-                {audioEnabled && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.5 }}
-                    className="text-white/50 text-xs font-light"
-                  >
-                    {ambientSounds[selectedSound].emoji} {ambientSounds[selectedSound].name}
-                  </motion.p>
-                )}
-              </motion.div>
-            )}
+              )}
+              
+              {audioEnabled && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center gap-2 text-white/60 text-sm font-light"
+                >
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  Звук воспроизводится
+                </motion.div>
+              )}
+            </motion.div>
           </motion.div>
         )}
 
