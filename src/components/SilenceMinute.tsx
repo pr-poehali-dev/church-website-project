@@ -98,27 +98,34 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   }, [stage]);
 
   useEffect(() => {
-    if (stage === "silence" && !isMuted) {
-      const soundUrls = [
-        "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-        "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
-        ""
-      ];
-      
-      if (soundUrls[selectedSound]) {
-        audioRef.current = new Audio(soundUrls[selectedSound]);
-        audioRef.current.loop = true;
-        audioRef.current.volume = 0.3;
-        audioRef.current.play().catch(() => {});
-      }
-      
-      return () => {
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current = null;
-        }
-      };
+    const soundUrls = [
+      "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
+      "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
+      ""
+    ];
+
+    if (stage === "intro" && soundUrls[selectedSound]) {
+      audioRef.current = new Audio(soundUrls[selectedSound]);
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.3;
     }
+
+    if (stage === "silence" && audioRef.current && !isMuted && soundUrls[selectedSound]) {
+      audioRef.current.play().catch(err => console.log("Audio play failed:", err));
+    }
+
+    if (stage === "reflection" || stage === "complete") {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    }
+
+    return () => {
+      if (audioRef.current && (stage === "complete" || isMuted)) {
+        audioRef.current.pause();
+      }
+    };
   }, [stage, selectedSound, isMuted]);
 
   const progress = ((DURATION - timeLeft) / DURATION) * 100;
@@ -185,11 +192,17 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
               className="mt-8 flex flex-col gap-4"
             >
               <p className="text-white/50 text-sm font-light">Выберите звуковое сопровождение:</p>
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-center flex-wrap">
                 {ambientSounds.map((sound, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedSound(index)}
+                    onClick={() => {
+                      setSelectedSound(index);
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current = null;
+                      }
+                    }}
                     className={`px-6 py-3 rounded-full backdrop-blur-sm transition-all ${
                       selectedSound === index
                         ? "bg-white/20 text-white scale-105"
@@ -276,7 +289,17 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
             </motion.p>
 
             <motion.button
-              onClick={() => setIsMuted(!isMuted)}
+              onClick={() => {
+                const newMuted = !isMuted;
+                setIsMuted(newMuted);
+                if (audioRef.current) {
+                  if (newMuted) {
+                    audioRef.current.pause();
+                  } else {
+                    audioRef.current.play().catch(() => {});
+                  }
+                }
+              }}
               className="text-white/40 hover:text-white/60 transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
