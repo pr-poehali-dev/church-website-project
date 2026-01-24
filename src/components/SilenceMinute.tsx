@@ -58,15 +58,49 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const playSound = () => {
+    const soundUrls = [
+      "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
+      "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
+      ""
+    ];
+
+    if (soundUrls[selectedSound] && !isMuted) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      audioRef.current = new Audio(soundUrls[selectedSound]);
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.3;
+      audioRef.current.play().catch(err => console.log("Audio error:", err));
+    }
+  };
+
   useEffect(() => {
     if (stage === "intro") {
       const timer = setTimeout(() => {
         setStage("silence");
         setTimeLeft(DURATION);
+        
+        const soundUrls = [
+          "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
+          "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
+          ""
+        ];
+
+        if (soundUrls[selectedSound] && !isMuted) {
+          if (audioRef.current) {
+            audioRef.current.pause();
+          }
+          audioRef.current = new Audio(soundUrls[selectedSound]);
+          audioRef.current.loop = true;
+          audioRef.current.volume = 0.3;
+          audioRef.current.play().catch(err => console.log("Audio error:", err));
+        }
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [stage]);
+  }, [stage, selectedSound, isMuted]);
 
   useEffect(() => {
     if (stage === "silence") {
@@ -98,35 +132,22 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   }, [stage]);
 
   useEffect(() => {
-    const soundUrls = [
-      "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-      "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
-      ""
-    ];
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
-    if (stage === "intro" && soundUrls[selectedSound]) {
-      audioRef.current = new Audio(soundUrls[selectedSound]);
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.3;
-    }
-
-    if (stage === "silence" && audioRef.current && !isMuted && soundUrls[selectedSound]) {
-      audioRef.current.play().catch(err => console.log("Audio play failed:", err));
-    }
-
+  useEffect(() => {
     if (stage === "reflection" || stage === "complete") {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
     }
-
-    return () => {
-      if (audioRef.current && (stage === "complete" || isMuted)) {
-        audioRef.current.pause();
-      }
-    };
-  }, [stage, selectedSound, isMuted]);
+  }, [stage]);
 
   const progress = ((DURATION - timeLeft) / DURATION) * 100;
 
@@ -296,7 +317,7 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
                   if (newMuted) {
                     audioRef.current.pause();
                   } else {
-                    audioRef.current.play().catch(() => {});
+                    audioRef.current.play().catch(err => console.log("Play error:", err));
                   }
                 }
               }}
