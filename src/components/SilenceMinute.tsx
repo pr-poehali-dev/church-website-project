@@ -159,7 +159,7 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
             <motion.div
               animate={{ scale: breatheScale }}
               transition={{ duration: 4, ease: "easeInOut" }}
-              className="relative w-64 h-64 mx-auto mb-12"
+              className="relative w-64 h-64 mx-auto mb-8"
             >
               <svg className="w-full h-full transform -rotate-90">
                 <circle
@@ -188,15 +188,25 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
                 />
               </svg>
 
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
                 <motion.div
                   animate={{ scale: breatheScale }}
                   transition={{ duration: 4, ease: "easeInOut" }}
-                  className="w-32 h-32 bg-white/20 rounded-full backdrop-blur-md flex items-center justify-center"
+                  className="w-32 h-32 bg-white/20 rounded-full backdrop-blur-md flex flex-col items-center justify-center"
                 >
                   <span className="text-5xl font-light text-white">{timeLeft}</span>
+                  <span className="text-xs text-white/60 font-light mt-1">секунд</span>
                 </motion.div>
               </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-white/50 text-sm font-light mb-6"
+            >
+              Минута тишины с Богом
             </motion.div>
 
             <motion.p
