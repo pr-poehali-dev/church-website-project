@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
@@ -40,6 +40,12 @@ const reflections = [
   "Где я чувствую Его присутствие в своей жизни?"
 ];
 
+const ambientSounds = [
+  { name: "Природа", emoji: "🌿" },
+  { name: "Дождь", emoji: "🌧️" },
+  { name: "Тишина", emoji: "🤫" }
+];
+
 type Stage = "intro" | "silence" | "reflection" | "complete";
 
 const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
@@ -48,6 +54,9 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
   const [verse] = useState(() => bibleVerses[Math.floor(Math.random() * bibleVerses.length)]);
   const [reflection] = useState(() => reflections[Math.floor(Math.random() * reflections.length)]);
   const [breatheScale, setBreatheScale] = useState(1);
+  const [selectedSound, setSelectedSound] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (stage === "intro") {
@@ -87,6 +96,30 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
       return () => clearTimeout(timer);
     }
   }, [stage]);
+
+  useEffect(() => {
+    if (stage === "silence" && !isMuted) {
+      const soundUrls = [
+        "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
+        "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3",
+        ""
+      ];
+      
+      if (soundUrls[selectedSound]) {
+        audioRef.current = new Audio(soundUrls[selectedSound]);
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.3;
+        audioRef.current.play().catch(() => {});
+      }
+      
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current = null;
+        }
+      };
+    }
+  }, [stage, selectedSound, isMuted]);
 
   const progress = ((DURATION - timeLeft) / DURATION) * 100;
 
@@ -143,6 +176,31 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
               className="mt-12 text-white/40 text-sm"
             >
               Приготовьтесь к минуте тишины...
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+              className="mt-8 flex flex-col gap-4"
+            >
+              <p className="text-white/50 text-sm font-light">Выберите звуковое сопровождение:</p>
+              <div className="flex gap-3 justify-center">
+                {ambientSounds.map((sound, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedSound(index)}
+                    className={`px-6 py-3 rounded-full backdrop-blur-sm transition-all ${
+                      selectedSound === index
+                        ? "bg-white/20 text-white scale-105"
+                        : "bg-white/5 text-white/60 hover:bg-white/10"
+                    }`}
+                  >
+                    <span className="text-xl mr-2">{sound.emoji}</span>
+                    <span className="text-sm font-light">{sound.name}</span>
+                  </button>
+                ))}
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -212,10 +270,19 @@ const SilenceMinute = ({ onClose }: SilenceMinuteProps) => {
             <motion.p
               animate={{ opacity: [0.4, 0.7, 0.4] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="text-white/60 text-lg font-light"
+              className="text-white/60 text-lg font-light mb-8"
             >
               {breatheScale === 1 ? "Вдох..." : "Выдох..."}
             </motion.p>
+
+            <motion.button
+              onClick={() => setIsMuted(!isMuted)}
+              className="text-white/40 hover:text-white/60 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Icon name={isMuted ? "VolumeX" : "Volume2"} size={24} />
+            </motion.button>
           </motion.div>
         )}
 
