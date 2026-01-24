@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { motion, useScroll, useTransform } from "framer-motion";
+import SilenceMinute from "@/components/SilenceMinute";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -23,6 +24,7 @@ const Index = () => {
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentDay, setCurrentDay] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showSilenceMinute, setShowSilenceMinute] = useState(false);
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -274,22 +276,42 @@ const Index = () => {
               <span className="font-semibold text-base md:text-lg">Иркутск / Павла Красильникова 109</span>
             </div>
           </div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-foreground font-semibold text-lg px-8 py-6 shadow-xl"
-              onClick={() => scrollToSection("schedule")}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Icon name="Calendar" className="mr-2" size={20} />
-              Посетить служение
-            </Button>
-          </motion.div>
+              <Button
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-foreground font-semibold text-lg px-8 py-6 shadow-xl"
+                onClick={() => scrollToSection("schedule")}
+              >
+                <Icon name="Calendar" className="mr-2" size={20} />
+                Посетить служение
+              </Button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm font-light text-lg px-8 py-6 shadow-xl"
+                onClick={() => setShowSilenceMinute(true)}
+              >
+                <Icon name="Pause" className="mr-2" size={20} />
+                Остановиться
+              </Button>
+            </motion.div>
+          </div>
           <div className="mt-16">
             <button
               onClick={() => scrollToSection("about")}
@@ -865,6 +887,10 @@ const Index = () => {
         >
           <Icon name="ArrowUp" size={24} />
         </motion.button>
+      )}
+
+      {showSilenceMinute && (
+        <SilenceMinute onClose={() => setShowSilenceMinute(false)} />
       )}
     </div>
   );
