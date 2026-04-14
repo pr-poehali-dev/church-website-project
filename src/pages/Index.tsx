@@ -10,6 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import StarCanvas from "@/components/StarCanvas";
+import MinistryQuiz from "@/components/MinistryQuiz";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -961,6 +963,59 @@ const Index = () => {
               </Card>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Звёздная секция — Стена веры */}
+      <section className="relative py-32 overflow-hidden bg-[#0a0e1a]">
+        <StarCanvas />
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-4">
+              Небо говорит
+            </p>
+            <h2
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+              style={{ fontFamily: "Playfair Display, serif" }}
+            >
+              «Небеса проповедуют<br />
+              <span className="italic text-accent/90">славу Божию»</span>
+            </h2>
+            <p className="text-white/40 text-sm tracking-widest mb-10">Псалом 18:2</p>
+            <p className="text-white/60 max-w-xl mx-auto text-base leading-relaxed" style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem" }}>
+              Подвигайте мышью по звёздному небу — каждая звезда откликается на ваше касание,
+              как Бог откликается на каждое сердце.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Тест — Узнай своё служение */}
+      <section className="py-24 md:py-32 bg-background relative overflow-hidden">
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-80 h-80 bg-accent/4 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute left-0 bottom-0 w-64 h-64 bg-primary/4 rounded-full blur-3xl pointer-events-none" />
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-14 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">
+              Интерактив
+            </p>
+            <h2
+              className="text-4xl md:text-5xl font-bold text-primary mb-4"
+              style={{ fontFamily: "Playfair Display, serif" }}
+            >
+              Узнай своё служение
+            </h2>
+            <div className="section-divider" />
+            <p className="text-muted-foreground mt-6 max-w-md mx-auto text-sm">
+              4 простых вопроса — и ты узнаешь, в каком служении раскроется твой дар
+            </p>
+          </div>
+          <MinistryQuiz />
         </div>
       </section>
 
