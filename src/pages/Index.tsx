@@ -779,13 +779,15 @@ const Index = () => {
             <DialogTitle className="text-2xl text-primary">Что такое воскресное христианское богослужение</DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
-                <div className="flex items-start gap-3 bg-amber-50 border border-amber-300 rounded-lg p-4">
-                  <span className="text-amber-500 text-xl">⏰</span>
-                  <div>
-                    <p className="font-semibold text-amber-800">Внимание! Изменение времени</p>
-                    <p className="text-amber-700 text-sm mt-1">С этого воскресенья служение начинается в <strong>11:00</strong> (ранее было в 13:00). Приходите раньше!</p>
+                {new Date() < new Date('2026-06-14') && (
+                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-300 rounded-lg p-4">
+                    <span className="text-amber-500 text-xl">⏰</span>
+                    <div>
+                      <p className="font-semibold text-amber-800">Внимание! Изменение времени</p>
+                      <p className="text-amber-700 text-sm mt-1">С этого воскресенья служение начинается в <strong>11:00</strong> (ранее было в 13:00). Приходите раньше!</p>
+                    </div>
                   </div>
-                </div>
+                )}
                 <p>Воскресное богослужение — это особое собрание христиан, которое проходит в церкви по воскресеньям. В этот день верующие приходят вместе, чтобы поклоняться Богу, благодарить Его и укрепляться в вере.</p>
                 <p>Во время богослужения звучит христианская музыка и песни прославления. Музыка помогает людям почувствовать Божье присутствие, выразить радость и благодарность, а также настроиться на молитву.</p>
                 <p>Важной частью служения является общение. Люди приветствуют друг друга, делятся поддержкой, знакомятся и помогают тем, кто нуждается. Это создаёт атмосферу дружбы, любви и единства.</p>
