@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,9 +23,7 @@ const Index = () => {
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentDay, setCurrentDay] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll();
-  const { scrollY } = useScroll();
+  const { scrollYProgress, scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], ["0%", "30%"]);
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
@@ -375,38 +373,53 @@ const Index = () => {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7 }}
           >
-            <Card className="overflow-hidden border-0 shadow-2xl shadow-primary/8 rounded-3xl">
+            <Card className="overflow-hidden border-0 shadow-2xl shadow-primary/10 rounded-3xl">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row">
-                  <div className="md:w-2/5 relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary/80" />
+                  {/* Фото пастора */}
+                  <div className="md:w-2/5 relative bg-primary min-h-[360px] md:min-h-[480px]">
                     <img
                       src="https://cdn.poehali.dev/files/фон 32.jpg"
                       alt="Алексей Нарутдинов"
-                      className="relative w-full h-72 md:h-full object-cover mix-blend-overlay opacity-80"
+                      className="absolute inset-0 w-full h-full object-cover object-top"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent md:bg-gradient-to-r" />
+                    {/* Лёгкий градиент снизу на мобилке */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
+                    {/* На десктопе — тонкая тень справа для перехода */}
+                    <div className="hidden md:block absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white/5 to-transparent" />
+                    {/* Имя поверх фото на мобилке */}
                     <div className="absolute bottom-6 left-6 md:hidden">
+                      <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-1">Служитель церкви</p>
                       <h3 className="text-2xl font-bold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>Алексей Нарутдинов</h3>
-                      <p className="text-accent text-sm font-medium tracking-wide">Пастор церкви</p>
+                    </div>
+                    {/* Золотая плашка-лейбл (десктоп) */}
+                    <div className="hidden md:flex absolute top-6 left-6 items-center gap-2 bg-accent/90 backdrop-blur-sm text-primary rounded-xl px-4 py-2">
+                      <Icon name="Star" size={14} />
+                      <span className="text-xs font-bold tracking-wide uppercase">Пастор церкви</span>
                     </div>
                   </div>
-                  <div className="md:w-3/5 p-8 md:p-12 flex flex-col justify-center">
+
+                  {/* Текстовая часть */}
+                  <div className="md:w-3/5 p-8 md:p-12 flex flex-col justify-center bg-white">
                     <div className="hidden md:block mb-6">
-                      <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-2">Служитель церкви</p>
-                      <h3 className="text-3xl md:text-4xl font-bold text-primary mb-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                      <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Служитель церкви</p>
+                      <h3 className="text-3xl md:text-4xl font-bold text-primary mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
                         Алексей Нарутдинов
                       </h3>
-                      <div className="w-12 h-0.5 bg-accent mt-3" />
+                      <div className="w-12 h-0.5 bg-accent" />
                     </div>
-                    <p className="text-muted-foreground leading-relaxed text-base md:text-lg" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.15rem' }}>
+                    <p className="text-foreground/70 leading-relaxed mb-5" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                       Служитель Божий, посвятивший свою жизнь проповеди Евангелия и духовному наставлению общины. С любовью и мудростью ведёт церковь по пути веры и служения.
                     </p>
-                    <div className="mt-8 flex flex-wrap gap-4">
-                      <a href="tel:+79041304051" className="inline-flex items-center gap-2 text-primary font-medium hover:text-accent transition-colors text-sm">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Icon name="Phone" size={14} />
-                        </div>
+                    <p className="text-foreground/60 leading-relaxed text-sm mb-8">
+                      Алексей — пример того, как вера способна изменить жизнь. Он принимает каждого с открытым сердцем и всегда готов помочь найти ответы на важные жизненные вопросы.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <a
+                        href="tel:+79041304051"
+                        className="inline-flex items-center gap-3 px-5 py-3 bg-primary/8 hover:bg-primary hover:text-white rounded-xl transition-all group text-sm font-medium text-primary"
+                      >
+                        <Icon name="Phone" size={16} />
                         +7 (904) 130-40-51
                       </a>
                     </div>
@@ -450,7 +463,7 @@ const Index = () => {
                   <Card className="h-full border border-border/50 shadow-lg shadow-primary/5 rounded-3xl overflow-hidden group hover:shadow-xl hover:shadow-primary/10 transition-shadow">
                     <CardContent className="p-8">
                       <div className="w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center mb-6 group-hover:bg-accent/15 transition-colors">
-                        <Icon name={item.icon as any} className="text-primary group-hover:text-accent transition-colors" size={26} />
+                        <Icon name={item.icon} className="text-primary group-hover:text-accent transition-colors" size={26} />
                       </div>
                       <h3 className="text-xl font-semibold mb-3 text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
                         {item.title}
@@ -519,7 +532,7 @@ const Index = () => {
                         <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${
                           isToday ? 'bg-accent shadow-md shadow-accent/30' : isNext ? 'bg-primary shadow-md shadow-primary/20' : 'bg-secondary'
                         }`}>
-                          <Icon name={service.icon as any} className={isToday || isNext ? 'text-white' : 'text-primary'} size={22} />
+                          <Icon name={service.icon} className={isToday || isNext ? 'text-white' : 'text-primary'} size={22} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -586,7 +599,7 @@ const Index = () => {
                 >
                   <div className="h-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-7 hover:bg-white/10 hover:border-accent/30 transition-all group">
                     <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center mb-5 group-hover:bg-accent/30 transition-colors">
-                      <Icon name={item.icon as any} className="text-accent" size={22} />
+                      <Icon name={item.icon} className="text-accent" size={22} />
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
                       {item.title}
@@ -702,7 +715,7 @@ const Index = () => {
                         {contact.href ? (
                           <a href={contact.href} className="flex items-start gap-4 group">
                             <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/15 transition-colors">
-                              <Icon name={contact.icon as any} className="text-primary group-hover:text-accent transition-colors" size={18} />
+                              <Icon name={contact.icon} className="text-primary group-hover:text-accent transition-colors" size={18} />
                             </div>
                             <div>
                               <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-0.5">{contact.label}</p>
@@ -712,7 +725,7 @@ const Index = () => {
                         ) : (
                           <div className="flex items-start gap-4">
                             <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0">
-                              <Icon name={contact.icon as any} className="text-primary" size={18} />
+                              <Icon name={contact.icon} className="text-primary" size={18} />
                             </div>
                             <div>
                               <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-0.5">{contact.label}</p>
