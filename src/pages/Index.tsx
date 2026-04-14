@@ -967,30 +967,57 @@ const Index = () => {
       </section>
 
       {/* Звёздная секция — Стена веры */}
-      <section className="relative py-32 overflow-hidden bg-[#0a0e1a]">
+      <section className="relative overflow-hidden bg-[#060a14]" style={{ minHeight: "600px" }}>
         <StarCanvas />
-        <div className="relative z-10 container mx-auto px-4 text-center">
+        {/* Градиент сверху */}
+        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#060a14] to-transparent z-10 pointer-events-none" />
+        {/* Градиент снизу */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#060a14] to-transparent z-10 pointer-events-none" />
+
+        <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 py-28 md:py-40">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.9 }}
+            className="pointer-events-none select-none"
           >
-            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-4">
-              Небо говорит
+            <p className="text-accent text-xs tracking-[0.35em] uppercase font-semibold mb-5">
+              ✦ Небо говорит ✦
             </p>
             <h2
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
-              style={{ fontFamily: "Playfair Display, serif" }}
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-5 leading-tight"
+              style={{ fontFamily: "Playfair Display, serif", textShadow: "0 0 60px rgba(255,210,100,0.15)" }}
             >
               «Небеса проповедуют<br />
-              <span className="italic text-accent/90">славу Божию»</span>
+              <span className="italic" style={{ color: "hsl(38 92% 60%)" }}>славу Божию»</span>
             </h2>
-            <p className="text-white/40 text-sm tracking-widest mb-10">Псалом 18:2</p>
-            <p className="text-white/60 max-w-xl mx-auto text-base leading-relaxed" style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem" }}>
-              Подвигайте мышью по звёздному небу — каждая звезда откликается на ваше касание,
-              как Бог откликается на каждое сердце.
+            <p className="text-white/30 text-sm tracking-[0.4em] mb-10 uppercase">Псалом 18:2</p>
+            <p className="text-white/55 max-w-md mx-auto leading-relaxed" style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem" }}>
+              Касайтесь звёздного неба — и оно откликнется,<br className="hidden md:inline" />
+              как Бог откликается на каждое сердце
             </p>
+          </motion.div>
+
+          {/* Подсказки */}
+          <motion.div
+            className="flex items-center gap-6 mt-12 pointer-events-none"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            <div className="flex items-center gap-2 text-white/30 text-xs">
+              <span className="hidden md:inline">🖱</span>
+              <span className="md:hidden">👆</span>
+              <span className="hidden md:inline">Двигайте мышью</span>
+              <span className="md:hidden">Касайтесь экрана</span>
+            </div>
+            <div className="w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-2 text-white/30 text-xs">
+              <span>✨</span>
+              <span>Нажмите — взрыв звёзд</span>
+            </div>
           </motion.div>
         </div>
       </section>
