@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { motion, useScroll, useTransform } from "framer-motion";
-
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -24,10 +23,11 @@ const Index = () => {
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentDay, setCurrentDay] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 600], ["0%", "30%"]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   const services = [
     { day: 0, name: 'Воскресное служение', time: 'Воскресенье, 11:00', icon: 'Sun', dialog: () => setShowSundayDialog(true) },
@@ -35,466 +35,518 @@ const Index = () => {
     { day: 2, name: 'Изучение Библии', time: 'Вторник, 08:00', icon: 'BookOpen', dialog: () => setShowBibleDialog(true) },
     { day: 3, name: 'Молитвенное собрание', time: 'Среда, 19:00', icon: 'Moon', dialog: () => setShowPrayerDialog(true) },
     { day: 4, name: 'Сестринский разговор', time: 'Четверг, 19:00', icon: 'Users', dialog: () => setShowSistersDialog(true) },
-    { day: 5, name: 'Братский разговор', time: 'Пятница, 19:00', icon: 'Users', dialog: () => setShowBrothersDialog(true) },
+    { day: 5, name: 'Братский разговор', time: 'Пятница, 19:00', icon: 'Users2', dialog: () => setShowBrothersDialog(true) },
   ];
 
   const getNextServiceIndex = () => {
     const today = new Date().getDay();
-    let nextIndex = services.findIndex(service => service.day > today);
-    if (nextIndex === -1) {
-      nextIndex = 0;
-    }
+    let nextIndex = services.findIndex(s => s.day > today);
+    if (nextIndex === -1) nextIndex = 0;
     return nextIndex;
   };
 
   const biblicalVerses = [
-    {
-      text: "«Возложи на Господа заботы твои, и Он поддержит тебя»",
-      reference: "Псалом 54:23"
-    },
-    {
-      text: "«Ибо все возможно верующему»",
-      reference: "Марк 9:23"
-    },
-    {
-      text: "«Господь — Пастырь мой; я ни в чем не буду нуждаться»",
-      reference: "Псалом 22:1"
-    },
-    {
-      text: "«Бог есть любовь, и пребывающий в любви пребывает в Боге»",
-      reference: "1 Иоанна 4:16"
-    },
-    {
-      text: "«Все могу в укрепляющем меня Иисусе Христе»",
-      reference: "Филиппийцам 4:13"
-    }
+    { text: "«Возложи на Господа заботы твои, и Он поддержит тебя»", reference: "Псалом 54:23" },
+    { text: "«Ибо все возможно верующему»", reference: "Марк 9:23" },
+    { text: "«Господь — Пастырь мой; я ни в чём не буду нуждаться»", reference: "Псалом 22:1" },
+    { text: "«Бог есть любовь, и пребывающий в любви пребывает в Боге»", reference: "1 Иоанна 4:16" },
+    { text: "«Всё могу в укрепляющем меня Иисусе Христе»", reference: "Филиппийцам 4:13" },
   ];
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
     setMobileMenuOpen(false);
-    const element = document.getElementById(section);
-    element?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   useEffect(() => {
-    const updateIrkutskTime = () => {
+    const updateDay = () => {
       const now = new Date();
-      const irkutskTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Irkutsk' }));
-      setCurrentDay(irkutskTime.getDay());
+      const irkutsk = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Irkutsk' }));
+      setCurrentDay(irkutsk.getDay());
     };
-
-    updateIrkutskTime();
-    
-    const interval = setInterval(updateIrkutskTime, 60000);
-    
-    return () => clearInterval(interval);
+    updateDay();
+    const i = setInterval(updateDay, 60000);
+    return () => clearInterval(i);
   }, []);
 
   useEffect(() => {
-    const verseInterval = setInterval(() => {
-      setCurrentVerseIndex((prevIndex) => 
-        (prevIndex + 1) % biblicalVerses.length
-      );
+    const i = setInterval(() => {
+      setCurrentVerseIndex(p => (p + 1) % biblicalVerses.length);
     }, 5000);
-
-    return () => clearInterval(verseInterval);
+    return () => clearInterval(i);
   }, [biblicalVerses.length]);
 
   useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
-
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+    document.querySelectorAll('.animate-on-scroll').forEach(el => obs.observe(el));
+    return () => obs.disconnect();
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 500);
-    };
-
+    const handleScroll = () => setShowScrollTop(window.scrollY > 500);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = [
+    { id: "home", label: "Главная" },
+    { id: "about", label: "О церкви" },
+    { id: "schedule", label: "Расписание" },
+    { id: "ministries", label: "Служения" },
+    { id: "sermons", label: "Проповеди" },
+    { id: "contacts", label: "Контакты" },
+  ];
+
+  const ministriesList = [
+    { icon: 'Music', title: 'Прославление', desc: 'Музыкальное служение, воспевающее славу Богу через современные и традиционные гимны' },
+    { icon: 'Baby', title: 'Детское служение', desc: 'Воскресная школа для детей с библейскими уроками, играми и творчеством' },
+    { icon: 'Sparkles', title: 'Молодёжное служение', desc: 'Встречи молодёжи для общения, духовного роста и совместного служения' },
+    { icon: 'HandHeart', title: 'Милосердие', desc: 'Помощь нуждающимся, социальное служение и благотворительность' },
+    { icon: 'Users2', title: 'Малые группы', desc: 'Домашние группы для близкого общения, изучения Библии и взаимной поддержки' },
+    { icon: 'Heart', title: 'Семейное служение', desc: 'Поддержка семей, консультирование и совместные мероприятия' },
+    { icon: 'Globe', title: 'Миссионерство', desc: 'Распространение Евангелия и поддержка миссионерской деятельности' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-background">
+      {/* Прогресс-бар */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-[100]"
-        style={{ scaleX: scrollYProgress }}
+        className="fixed top-0 left-0 right-0 h-0.5 z-[100] origin-left"
+        style={{
+          scaleX: scrollYProgress,
+          background: "linear-gradient(90deg, hsl(220 55% 22%), hsl(38 92% 50%))"
+        }}
       />
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 transition-all duration-300 mt-1">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img 
-              src="https://cdn.poehali.dev/files/фон 65.jpg" 
-              alt="Церковь Бога Моего" 
-              className="h-14 w-14 object-contain rounded-lg shadow-md"
-            />
-            <span className="text-xl font-semibold text-primary">Церковь Бога Моего</span>
-          </div>
-          <div className="hidden md:flex gap-6">
-            {["home", "about", "schedule", "ministries", "sermons", "contacts"].map((section) => (
-              <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  activeSection === section ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                {section === "home" && "Главная"}
-                {section === "about" && "О церкви"}
-                {section === "schedule" && "Расписание"}
-                {section === "ministries" && "Служения"}
-                {section === "sermons" && "Проповеди"}
-                {section === "contacts" && "Контакты"}
-              </button>
-            ))}
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <Icon name={mobileMenuOpen ? "X" : "Menu"} size={24} />
-          </Button>
-        </div>
-        
-        {/* Мобильное меню */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-border">
-            <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-              {["home", "about", "schedule", "ministries", "sermons", "contacts"].map((section) => (
+
+      {/* Навигация */}
+      <nav className="fixed top-0.5 w-full z-50 transition-all duration-500">
+        <div className="mx-4 md:mx-8 mt-3">
+          <div className="glass rounded-2xl px-5 py-3 flex items-center justify-between shadow-lg shadow-black/5">
+            <button onClick={() => scrollToSection("home")} className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-accent/20 rounded-xl blur-sm group-hover:blur-md transition-all" />
+                <img
+                  src="https://cdn.poehali.dev/files/фон 65.jpg"
+                  alt="Церковь Бога Моего"
+                  className="relative h-10 w-10 object-contain rounded-xl"
+                />
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-sm font-semibold text-primary leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Церковь Бога Моего
+                </p>
+                <p className="text-[10px] text-muted-foreground tracking-widest uppercase">Иркутск</p>
+              </div>
+            </button>
+
+            <div className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => (
                 <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`text-left text-base font-medium transition-colors hover:text-primary py-2 ${
-                    activeSection === section ? "text-primary" : "text-muted-foreground"
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`relative px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                    activeSection === item.id
+                      ? "text-primary bg-primary/8"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                   }`}
                 >
-                  {section === "home" && "Главная"}
-                  {section === "about" && "О церкви"}
-                  {section === "schedule" && "Расписание"}
-                  {section === "ministries" && "Служения"}
-                  {section === "sermons" && "Проповеди"}
-                  {section === "contacts" && "Контакты"}
+                  {item.label}
+                  {activeSection === item.id && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent"
+                    />
+                  )}
                 </button>
               ))}
             </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden rounded-xl"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <Icon name={mobileMenuOpen ? "X" : "Menu"} size={20} />
+            </Button>
           </div>
-        )}
+
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="glass rounded-2xl mt-2 px-4 py-4 shadow-xl"
+              >
+                {navItems.map((item, i) => (
+                  <motion.button
+                    key={item.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all ${
+                      activeSection === item.id ? "text-primary bg-primary/8" : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                    }`}
+                  >
+                    {item.label}
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </nav>
 
-      <section
-        id="home"
-        className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
-      >
+      {/* Hero */}
+      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <motion.div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url('https://cdn.poehali.dev/files/фон 56.JPEG')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            y: y,
-          }}
-        />
-        <motion.div 
-          className="container mx-auto px-4 z-10 text-center"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          style={{ opacity }}
+          className="absolute inset-0"
+          style={{ y: heroY }}
         >
-          <motion.div 
-            className="mb-6 inline-block"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ 
-              scale: 1, 
-              rotate: 0,
-              y: [0, -10, 0]
-            }}
-            transition={{ 
-              scale: { type: "spring", duration: 1.5, delay: 0.2 },
-              rotate: { type: "spring", duration: 1.5, delay: 0.2 },
-              y: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }
-            }}
+          <img
+            src="https://cdn.poehali.dev/files/фон 56.JPEG"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        </motion.div>
+
+        {/* Декоративные элементы */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/6 w-64 h-64 rounded-full bg-accent/5 blur-3xl" />
+          <div className="absolute bottom-1/3 right-1/6 w-96 h-96 rounded-full bg-white/5 blur-3xl" />
+        </div>
+
+        <motion.div
+          className="relative z-10 text-center px-4 max-w-5xl mx-auto"
+          style={{ opacity: heroOpacity }}
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          {/* Логотип */}
+          <motion.div
+            className="mb-8 inline-block"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2, type: "spring", stiffness: 120 }}
           >
-            <img 
-              src="https://cdn.poehali.dev/files/фон 72.PNG" 
-              alt="Церковь Бога Моего" 
-              className="w-32 h-32 md:w-40 md:h-40 object-contain mx-auto drop-shadow-2xl"
-            />
+            <div className="relative inline-block">
+              <div className="absolute inset-0 rounded-full bg-accent/20 blur-xl animate-pulse" />
+              <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center p-3">
+                <img
+                  src="https://cdn.poehali.dev/files/фон 72.PNG"
+                  alt="Церковь Бога Моего"
+                  className="w-full h-full object-contain drop-shadow-2xl"
+                />
+              </div>
+            </div>
           </motion.div>
-          <motion.h1 
-            className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg px-4"
+
+          {/* Подзаголовок */}
+          <motion.p
+            className="text-accent tracking-[0.3em] uppercase text-xs md:text-sm font-medium mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            Христианская церковь · Иркутск
+          </motion.p>
+
+          {/* Заголовок */}
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight"
+            style={{ fontFamily: 'Playfair Display, serif' }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.9, delay: 0.6 }}
           >
-            Церковь Бога Моего
+            Церковь<br />
+            <span className="italic text-accent/90">Бога Моего</span>
           </motion.h1>
-          <div className="relative h-40 md:h-32 overflow-hidden max-w-3xl mx-auto px-4">
+
+          {/* Разделитель */}
+          <motion.div
+            className="flex items-center justify-center gap-4 mb-8"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            <div className="w-16 h-px bg-accent/60" />
+            <Icon name="Cross" size={16} className="text-accent" />
+            <div className="w-16 h-px bg-accent/60" />
+          </motion.div>
+
+          {/* Цитаты */}
+          <div className="relative h-20 md:h-16 overflow-hidden max-w-2xl mx-auto mb-10">
             {biblicalVerses.map((verse, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  index === currentVerseIndex
-                    ? 'opacity-100 translate-y-0'
-                    : index < currentVerseIndex
-                    ? 'opacity-0 -translate-y-full'
-                    : 'opacity-0 translate-y-full'
-                }`}
+                className="absolute inset-0 flex flex-col items-center justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{
+                  opacity: index === currentVerseIndex ? 1 : 0,
+                  y: index === currentVerseIndex ? 0 : (index < currentVerseIndex ? -20 : 20)
+                }}
+                transition={{ duration: 0.7 }}
               >
-                <p className="text-lg md:text-2xl text-white/95 mb-4 font-light px-2">
+                <p className="text-white/90 text-base md:text-lg font-light italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                   {verse.text}
                 </p>
-                <p className="text-base md:text-lg text-white/90">{verse.reference}</p>
-              </div>
+                <p className="text-accent/80 text-sm mt-1 tracking-widest">{verse.reference}</p>
+              </motion.div>
             ))}
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 px-4">
-            <div className="flex items-center gap-2 text-white text-center">
-              <Icon name="MapPin" size={20} />
-              <span className="font-semibold text-base md:text-lg">Иркутск / Павла Красильникова 109</span>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+
+          {/* Адрес */}
+          <motion.div
+            className="flex items-center justify-center gap-2 text-white/70 mb-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1 }}
+          >
+            <Icon name="MapPin" size={16} className="text-accent" />
+            <span className="text-sm tracking-wide">Павла Красильникова 109</span>
+          </motion.div>
+
+          {/* CTA кнопки */}
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.1 }}
+          >
+            <Button
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-primary font-semibold px-10 py-6 text-base shadow-2xl shadow-accent/30 rounded-2xl"
+              onClick={() => scrollToSection("schedule")}
             >
-              <Button
-                size="lg"
-                className="bg-accent hover:bg-accent/90 text-foreground font-semibold text-lg px-8 py-6 shadow-xl"
-                onClick={() => scrollToSection("schedule")}
-              >
-                <Icon name="Calendar" className="mr-2" size={20} />
-                Посетить служение
-              </Button>
-            </motion.div>
-
-
-          </div>
-          <div className="mt-16">
-            <button
+              <Icon name="Calendar" className="mr-2" size={18} />
+              Посетить служение
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white/30 text-white hover:bg-white/10 bg-white/5 backdrop-blur-sm px-10 py-6 text-base rounded-2xl"
               onClick={() => scrollToSection("about")}
-              className="flex flex-col items-center gap-2 text-white/80 hover:text-white transition-all animate-bounce"
             >
-              <Icon name="ChevronDown" size={32} strokeWidth={1.5} />
-            </button>
-          </div>
+              <Icon name="ChevronDown" className="mr-2" size={18} />
+              Узнать больше
+            </Button>
+          </motion.div>
         </motion.div>
+
+        {/* Стрелка вниз */}
+        <motion.button
+          onClick={() => scrollToSection("about")}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 hover:text-white transition-colors"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Icon name="ChevronDown" size={32} strokeWidth={1.5} />
+        </motion.button>
       </section>
 
-      <section id="about" className="py-12 md:py-20 bg-white">
+      {/* О церкви */}
+      <section id="about" className="py-24 md:py-32 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-primary animate-on-scroll animate-fade-up">
-            О нашей церкви
-          </h2>
-          
-          {/* Пастор церкви */}
-          <motion.div 
-            className="max-w-4xl mx-auto mb-16"
+          <div className="text-center mb-16 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Наша история</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              О нашей церкви
+            </h2>
+            <div className="section-divider" />
+          </div>
+
+          {/* Пастор */}
+          <motion.div
+            className="max-w-5xl mx-auto mb-20"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7 }}
           >
-            <motion.div
-              whileHover={{ scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="shadow-xl border-primary/20">
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row items-center gap-8">
-                  <div className="flex-shrink-0">
-                    <img 
-                      src="https://cdn.poehali.dev/files/фон 32.jpg" 
-                      alt="Алексей Нарутдинов" 
-                      className="w-48 h-auto md:w-64 md:h-auto object-contain rounded-lg shadow-lg"
+            <Card className="overflow-hidden border-0 shadow-2xl shadow-primary/8 rounded-3xl">
+              <CardContent className="p-0">
+                <div className="flex flex-col md:flex-row">
+                  <div className="md:w-2/5 relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary/80" />
+                    <img
+                      src="https://cdn.poehali.dev/files/фон 32.jpg"
+                      alt="Алексей Нарутдинов"
+                      className="relative w-full h-72 md:h-full object-cover mix-blend-overlay opacity-80"
                     />
-                  </div>
-                  <div className="flex-1 text-center md:text-left">
-                    <div className="flex flex-col md:flex-row items-center md:items-start gap-3 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <Icon name="Church" className="text-primary" size={24} />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl md:text-3xl font-bold text-primary">Алексей Нарутдинов</h3>
-                        <p className="text-lg text-foreground font-semibold">Пастор церкви</p>
-                      </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent md:bg-gradient-to-r" />
+                    <div className="absolute bottom-6 left-6 md:hidden">
+                      <h3 className="text-2xl font-bold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>Алексей Нарутдинов</h3>
+                      <p className="text-accent text-sm font-medium tracking-wide">Пастор церкви</p>
                     </div>
-                    <p className="text-muted-foreground leading-relaxed text-base">
-                      Служитель Божий, посвятивший свою жизнь проповеди Евангелия и духовному
-                      наставлению общины. С любовью и мудростью ведет церковь по пути веры и служения.
+                  </div>
+                  <div className="md:w-3/5 p-8 md:p-12 flex flex-col justify-center">
+                    <div className="hidden md:block mb-6">
+                      <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-2">Служитель церкви</p>
+                      <h3 className="text-3xl md:text-4xl font-bold text-primary mb-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                        Алексей Нарутдинов
+                      </h3>
+                      <div className="w-12 h-0.5 bg-accent mt-3" />
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed text-base md:text-lg" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.15rem' }}>
+                      Служитель Божий, посвятивший свою жизнь проповеди Евангелия и духовному наставлению общины. С любовью и мудростью ведёт церковь по пути веры и служения.
                     </p>
+                    <div className="mt-8 flex flex-wrap gap-4">
+                      <a href="tel:+79041304051" className="inline-flex items-center gap-2 text-primary font-medium hover:text-accent transition-colors text-sm">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Icon name="Phone" size={14} />
+                        </div>
+                        +7 (904) 130-40-51
+                      </a>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            </motion.div>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.div whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.15)" }} transition={{ duration: 0.3 }}>
-                <Card className="border-primary/20 shadow-lg h-full">
-              <CardContent className="p-6 md:p-8">
-                <div className="mb-4">
-                  <Icon name="Heart" className="text-primary" size={32} />
-                </div>
-                <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-primary">Наша миссия</h3>
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Мы стремимся быть светом в этом мире, распространяя любовь Божью и помогая
-                  людям найти истинный путь к спасению через Иисуса Христа. Наша церковь — это
-                  место, где каждый может встретиться с живым Богом.
-                </p>
-              </CardContent>
-                </Card>
+          {/* 3 колонки */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {[
+              {
+                icon: 'Heart',
+                title: 'Наша миссия',
+                text: 'Мы стремимся быть светом в этом мире, распространяя любовь Божью и помогая людям найти истинный путь к спасению через Иисуса Христа.',
+                delay: 0
+              },
+              {
+                icon: 'Users',
+                title: 'Наше сообщество',
+                text: 'Мы — семья верующих людей разных возрастов, объединённых одной верой. Тёплая атмосфера принятия, поддержки и духовного роста.',
+                delay: 0.1
+              },
+              {
+                icon: 'HandHeart',
+                title: 'Центр помощи',
+                text: 'Если вы в сложной жизненной ситуации — нет где жить, нужна работа — мы поможем.',
+                delay: 0.2,
+                phone: true
+              },
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: item.delay }}
+              >
+                <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.3 }}>
+                  <Card className="h-full border border-border/50 shadow-lg shadow-primary/5 rounded-3xl overflow-hidden group hover:shadow-xl hover:shadow-primary/10 transition-shadow">
+                    <CardContent className="p-8">
+                      <div className="w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center mb-6 group-hover:bg-accent/15 transition-colors">
+                        <Icon name={item.icon as any} className="text-primary group-hover:text-accent transition-colors" size={26} />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3 text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
+                        {item.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed text-sm">{item.text}</p>
+                      {item.phone && (
+                        <a href="tel:+79041269873" className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors text-sm mt-4">
+                          <Icon name="Phone" size={14} />
+                          8 (904) 126-98-73
+                        </a>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <motion.div whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.15)" }} transition={{ duration: 0.3 }}>
-                <Card className="border-primary/20 shadow-lg h-full">
-              <CardContent className="p-6 md:p-8">
-                <div className="mb-4">
-                  <Icon name="Users" className="text-primary" size={32} />
-                </div>
-                <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-primary">Наше сообщество</h3>
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Мы — семья верующих людей разных возрастов и культур, объединённых одной верой.
-                  В нашей церкви вы найдёте тёплую атмосферу принятия, поддержки и духовного роста
-                  в присутствии Господа.
-                </p>
-              </CardContent>
-                </Card>
-              </motion.div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <motion.div whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.15)" }} transition={{ duration: 0.3 }}>
-                <Card className="border-primary/20 shadow-lg h-full">
-              <CardContent className="p-6 md:p-8">
-                <div className="mb-4">
-                  <Icon name="HandHeart" className="text-primary" size={32} />
-                </div>
-                <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-primary">Центр социальной помощи</h3>
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-4">
-                  Если вы находитесь в сложной жизненной ситуации, нет где жить, нужна работа — мы поможем.
-                </p>
-                <a href="tel:+79041269873" className="inline-flex items-center gap-2 text-primary font-semibold hover:underline text-sm md:text-base">
-                  <Icon name="Phone" size={18} />
-                  8 (904) 126-98-73
-                </a>
-              </CardContent>
-                </Card>
-              </motion.div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section
-        id="schedule"
-        className="py-12 md:py-20 relative"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/f916dc69-76a7-4102-b24c-969c6df2d668.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-primary animate-on-scroll animate-fade-up">
-            Расписание богослужений
-          </h2>
-          <div className="max-w-3xl mx-auto grid gap-6">
+      {/* Расписание */}
+      <section id="schedule" className="py-24 md:py-32 relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/f916dc69-76a7-4102-b24c-969c6df2d668.jpg')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-background to-accent/4" />
+
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-16 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Каждую неделю</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Расписание богослужений
+            </h2>
+            <div className="section-divider" />
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-4">
             {services.map((service, index) => {
-              const nextServiceIndex = getNextServiceIndex();
-              const isNext = index === nextServiceIndex;
+              const nextIdx = getNextServiceIndex();
+              const isNext = index === nextIdx;
               const isToday = service.day === currentDay;
-              
+
               return (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Card 
-                  className={`shadow-lg cursor-pointer transition-all ${
-                    isToday ? 'border-2 border-accent bg-accent/10 ring-2 ring-accent/50' : ''
-                  } ${
-                    isNext && !isToday ? 'border-2 border-primary bg-primary/5' : ''
-                  }`}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
                   onClick={service.dialog}
                 >
-                  <CardContent className="p-4 md:p-8 flex items-start gap-4 md:gap-6">
-                    <div className="flex-shrink-0">
-                      <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center ${
-                        isToday ? 'bg-accent text-white' : isNext ? 'bg-primary text-white' : 'bg-primary/10'
-                      }`}>
-                        <Icon name={service.icon as any} className={isToday || isNext ? 'text-white' : 'text-primary'} size={24} />
-                      </div>
-                    </div>
-                    <div className="flex-grow">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                        <h3 className="text-xl md:text-2xl font-semibold text-primary">{service.name}</h3>
-                        {isToday && (
-                          <span className="px-3 py-1 bg-accent text-white text-sm font-semibold rounded-full animate-pulse">
-                            Сегодня
-                          </span>
-                        )}
-                        {isNext && !isToday && (
-                          <span className="px-3 py-1 bg-primary text-white text-sm font-semibold rounded-full">
-                            Следующее
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-base md:text-lg text-muted-foreground mb-2">{service.time}</p>
-                      <Button variant="outline" size="sm" className="text-primary mt-2">
-                        Подробнее
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                  <motion.div whileHover={{ scale: 1.015, x: 4 }} whileTap={{ scale: 0.99 }} transition={{ duration: 0.2 }}>
+                    <Card className={`cursor-pointer border transition-all rounded-2xl overflow-hidden ${
+                      isToday
+                        ? 'border-accent/60 shadow-lg shadow-accent/15 bg-gradient-to-r from-accent/5 to-accent/10'
+                        : isNext
+                        ? 'border-primary/40 shadow-lg shadow-primary/10 bg-gradient-to-r from-primary/3 to-primary/6'
+                        : 'border-border/40 shadow-md hover:border-primary/20 hover:shadow-lg'
+                    }`}>
+                      <CardContent className="p-5 md:p-6 flex items-center gap-5">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${
+                          isToday ? 'bg-accent shadow-md shadow-accent/30' : isNext ? 'bg-primary shadow-md shadow-primary/20' : 'bg-secondary'
+                        }`}>
+                          <Icon name={service.icon as any} className={isToday || isNext ? 'text-white' : 'text-primary'} size={22} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <h3 className="text-lg font-semibold text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
+                              {service.name}
+                            </h3>
+                            {isToday && (
+                              <span className="px-2.5 py-0.5 bg-accent text-primary text-xs font-bold rounded-full animate-pulse">
+                                Сегодня
+                              </span>
+                            )}
+                            {isNext && !isToday && (
+                              <span className="px-2.5 py-0.5 bg-primary text-white text-xs font-medium rounded-full">
+                                Следующее
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-muted-foreground text-sm">{service.time}</p>
+                        </div>
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
+                          isToday ? 'bg-accent/20' : 'bg-secondary'
+                        }`}>
+                          <Icon name="ChevronRight" size={16} className="text-muted-foreground" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 </motion.div>
               );
             })}
@@ -502,249 +554,320 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="ministries" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary animate-on-scroll animate-fade-up">Наши служения</h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              { icon: 'Music', title: 'Прославление', desc: 'Музыкальное служение, воспевающее славу Богу через современные и традиционные гимны', delay: 0 },
-              { icon: 'Baby', title: 'Детское служение', desc: 'Воскресная школа для детей с библейскими уроками, играми и творчеством', delay: 0.1 },
-              { icon: 'Sparkles', title: 'Молодёжное служение', desc: 'Встречи молодёжи для общения, духовного роста и совместного служения', delay: 0.2 },
-              { icon: 'HandHeart', title: 'Милосердие', desc: 'Помощь нуждающимся, социальное служение и благотворительность', delay: 0.3 },
-              { icon: 'Users2', title: 'Малые группы', desc: 'Домашние группы для близкого общения, изучения Библии и взаимной поддержки', delay: 0.4 },
-              { icon: 'Heart', title: 'Семейное служение', desc: 'Поддержка семей, консультирование и совместные мероприятия для укрепления отношений', delay: 0.5 },
-            ].map((ministry, idx) => (
+      {/* Служения */}
+      <section id="ministries" className="py-24 md:py-32 bg-primary overflow-hidden relative">
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: "radial-gradient(circle at 20% 50%, hsl(38 92% 50%) 0%, transparent 50%), radial-gradient(circle at 80% 20%, hsl(220 55% 40%) 0%, transparent 40%)"
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-16 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Вместе с Богом</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Наши служения
+            </h2>
+            <div className="w-16 h-0.5 bg-accent mx-auto mt-4" />
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 max-w-7xl mx-auto">
+            {ministriesList.map((item, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: ministry.delay }}
+                transition={{ duration: 0.5, delay: idx * 0.07 }}
               >
                 <motion.div
-                  whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)" }}
+                  whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ duration: 0.3 }}
+                  className="h-full"
                 >
-                  <Card className="border-primary/20 shadow-lg h-full">
-                    <CardContent className="p-6 text-center">
-                      <motion.div 
-                        className="mb-4 flex justify-center"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Icon name={ministry.icon as any} className="text-primary" size={32} />
-                        </div>
-                      </motion.div>
-                      <h3 className="text-xl font-semibold mb-3 text-primary">{ministry.title}</h3>
-                      <p className="text-muted-foreground">
-                        {ministry.desc}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <div className="h-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-7 hover:bg-white/10 hover:border-accent/30 transition-all group">
+                    <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center mb-5 group-hover:bg-accent/30 transition-colors">
+                      <Icon name={item.icon as any} className="text-accent" size={22} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
+                      {item.title}
+                    </h3>
+                    <p className="text-white/55 text-sm leading-relaxed">{item.desc}</p>
+                  </div>
                 </motion.div>
               </motion.div>
             ))}
-            <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <CardContent className="p-6 text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon name="Globe" className="text-primary" size={32} />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-primary">Миссионерство</h3>
-                <p className="text-muted-foreground">
-                  Распространение Евангелия и поддержка миссионерской деятельности
-                </p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
 
-      <section
-        id="sermons"
-        className="py-20 relative"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('https://cdn.poehali.dev/projects/3f2eba44-cb9b-45d8-9905-8690c25d20d6/files/97d663b3-d65b-4555-9e8d-b0440c16c7ab.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
+      {/* Проповеди */}
+      <section id="sermons" className="py-24 md:py-32 bg-background relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary">Проповеди</h2>
-          <div className="max-w-4xl mx-auto grid gap-6">
+          <div className="text-center mb-16 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Слово Божье</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Проповеди
+            </h2>
+            <div className="section-divider" />
+          </div>
+
+          <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.6 }}
             >
-              <Card className="shadow-lg">
-                <CardContent className="p-8">
-                <div className="flex items-start gap-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Icon name="PlayCircle" className="text-primary" size={28} />
+              <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.3 }}>
+                <Card className="border border-border/40 shadow-xl shadow-primary/8 rounded-3xl overflow-hidden group">
+                  <CardContent className="p-0">
+                    <div className="flex flex-col md:flex-row">
+                      <div className="md:w-56 bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center p-10">
+                        <motion.div
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                        >
+                          <div className="w-20 h-20 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                            <Icon name="PlayCircle" className="text-accent" size={40} />
+                          </div>
+                        </motion.div>
+                      </div>
+                      <div className="flex-1 p-8 md:p-10 flex flex-col justify-center">
+                        <p className="text-accent text-xs tracking-[0.2em] uppercase font-medium mb-3">11 января 2026</p>
+                        <h3 className="text-2xl md:text-3xl font-bold text-primary mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
+                          Сила Божьей Благодати
+                        </h3>
+                        <p className="text-muted-foreground mb-2 font-medium text-sm">Пастор Алексей Нарутдинов</p>
+                        <p className="text-muted-foreground leading-relaxed mb-6 text-sm">
+                          Благодать — это подарок Бога, который невозможно купить или заработать. Узнайте, как принять этот дар и как он меняет жизнь.
+                        </p>
+                        <a href="https://rutube.ru/video/67904ab1f57a236744674e492b534fea/" target="_blank" rel="noopener noreferrer">
+                          <Button className="w-fit rounded-xl shadow-md shadow-primary/20">
+                            <Icon name="Play" className="mr-2" size={16} />
+                            Смотреть на RuTube
+                          </Button>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-2xl font-semibold mb-2 text-primary">Сила Божье Благодати</h3>
-                    <p className="text-muted-foreground mb-3">Пастор Алексей Нарутдинов • 11 января 2026</p>
-                    <p className="text-muted-foreground mb-4">Благодать — это подарок Бога, который невозможно купить или заработать.</p>
-                    <a 
-                      href="https://rutube.ru/video/67904ab1f57a236744674e492b534fea/" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                    >
-                      <Button variant="default" size="sm">
-                        <Icon name="PlayCircle" className="mr-2" size={16} />
-                        Смотреть
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </motion.div>
+
+            <div className="mt-10 text-center">
+              <a href="https://rutube.ru/channel/41528628/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="rounded-xl border-primary/20 hover:border-primary/40">
+                  <Icon name="Video" className="mr-2" size={16} />
+                  Все проповеди на RuTube
+                  <Icon name="ExternalLink" className="ml-2" size={14} />
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="contacts" className="py-20 bg-white">
+      {/* Контакты */}
+      <section id="contacts" className="py-24 md:py-32 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-primary">Контакты</h2>
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-            <Card className="shadow-lg">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-semibold mb-6 text-primary">Где нас найти</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Icon name="MapPin" className="text-primary mt-1" size={20} />
-                    <div>
-                      <p className="font-medium">Адрес</p>
-                      <p className="text-muted-foreground">г.Иркутск / Павла Красильникова 109</p>
+          <div className="text-center mb-16 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Мы рядом</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Контакты
+            </h2>
+            <div className="section-divider" />
+          </div>
+
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 mb-10">
+            {/* Контактная информация */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="h-full border border-border/40 shadow-xl shadow-primary/8 rounded-3xl">
+                <CardContent className="p-8 md:p-10">
+                  <h3 className="text-2xl font-bold text-primary mb-8" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Где нас найти
+                  </h3>
+                  <div className="space-y-6">
+                    {[
+                      { icon: 'MapPin', label: 'Адрес', value: 'г. Иркутск, ул. Павла Красильникова 109', href: null },
+                      { icon: 'Phone', label: 'Телефон', value: '+7 (904) 130-40-51', href: 'tel:+79041304051' },
+                      { icon: 'Mail', label: 'Email', value: 'cerkv_irkutsk@mail.ru', href: 'mailto:cerkv_irkutsk@mail.ru' },
+                    ].map((contact, i) => (
+                      <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                        {contact.href ? (
+                          <a href={contact.href} className="flex items-start gap-4 group">
+                            <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/15 transition-colors">
+                              <Icon name={contact.icon as any} className="text-primary group-hover:text-accent transition-colors" size={18} />
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-0.5">{contact.label}</p>
+                              <p className="text-foreground font-medium text-sm group-hover:text-primary transition-colors">{contact.value}</p>
+                            </div>
+                          </a>
+                        ) : (
+                          <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0">
+                              <Icon name={contact.icon as any} className="text-primary" size={18} />
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-0.5">{contact.label}</p>
+                              <p className="text-foreground font-medium text-sm">{contact.value}</p>
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+
+                    <div className="pt-4 border-t border-border/50">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-4">Социальные сети</p>
+                      <div className="flex gap-3">
+                        <a href="https://vk.com/cerkv_irkutsk?from=groups" target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary hover:bg-primary hover:text-white transition-all text-sm font-medium text-foreground group">
+                          <Icon name="Users" size={16} className="group-hover:text-white" />
+                          ВКонтакте
+                        </a>
+                        <a href="https://rutube.ru/channel/41528628/" target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary hover:bg-primary hover:text-white transition-all text-sm font-medium text-foreground group">
+                          <Icon name="Video" size={16} className="group-hover:text-white" />
+                          RuTube
+                        </a>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Icon name="Phone" className="text-primary mt-1" size={20} />
-                    <div>
-                      <p className="font-medium">Телефон</p>
-                      <p className="text-muted-foreground">+7 (904) 130-40-51</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Icon name="Mail" className="text-primary mt-1" size={20} />
-                    <div>
-                      <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">cerkv_irkutsk@mail.ru</p>
-                    </div>
-                  </div>
-                  <a 
-                    href="https://vk.com/cerkv_irkutsk?from=groups" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-3 hover:opacity-80 transition-opacity"
-                  >
-                    <Icon name="Users" className="text-primary mt-1" size={20} />
-                    <div>
-                      <p className="font-medium">ВКонтакте</p>
-                      <p className="text-muted-foreground">Наша группа</p>
-                    </div>
-                  </a>
-                  <a 
-                    href="https://rutube.ru/channel/41528628/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-3 hover:opacity-80 transition-opacity"
-                  >
-                    <Icon name="Video" className="text-primary mt-1" size={20} />
-                    <div>
-                      <p className="font-medium">RuTube</p>
-                      <p className="text-muted-foreground">Наш канал</p>
-                    </div>
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-lg">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-semibold mb-6 text-primary">Написать нам</h3>
-                <form className="space-y-4">
-                  <div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Форма */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="h-full border border-border/40 shadow-xl shadow-primary/8 rounded-3xl">
+                <CardContent className="p-8 md:p-10">
+                  <h3 className="text-2xl font-bold text-primary mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Написать нам
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-8">Мы ответим в ближайшее время</p>
+                  <form className="space-y-4">
                     <input
                       type="text"
                       placeholder="Ваше имя"
-                      className="w-full px-4 py-3 rounded-lg border border-input focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-5 py-3.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all text-sm"
                     />
-                  </div>
-                  <div>
                     <input
                       type="email"
                       placeholder="Ваш email"
-                      className="w-full px-4 py-3 rounded-lg border border-input focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-5 py-3.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all text-sm"
                     />
-                  </div>
-                  <div>
                     <textarea
                       placeholder="Ваше сообщение"
-                      rows={4}
-                      className="w-full px-4 py-3 rounded-lg border border-input focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                      rows={5}
+                      className="w-full px-5 py-3.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all resize-none text-sm"
                     />
-                  </div>
-                  <Button className="w-full" size="lg">
-                    Отправить сообщение
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+                    <Button className="w-full py-6 rounded-xl text-base font-semibold shadow-lg shadow-primary/20">
+                      <Icon name="Send" className="mr-2" size={16} />
+                      Отправить сообщение
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
-          
-          <div className="max-w-5xl mx-auto mt-12">
-            <Card className="shadow-lg overflow-hidden">
+
+          {/* Карта */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="border border-border/40 shadow-xl shadow-primary/8 rounded-3xl overflow-hidden">
               <CardContent className="p-0">
                 <iframe
                   src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A52.28785247802825%2C%22lon%22%3A104.29652214050294%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22irkutsk%22%7D%2C%22org%22%3A%2270000001098974642%22%7D"
                   width="100%"
-                  height="500"
-                  style={{ border: 0 }}
+                  height="450"
+                  style={{ border: 0, display: 'block' }}
                   title="Карта 2ГИС"
-                ></iframe>
+                />
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      <footer className="bg-primary text-white py-12">
-        <div className="container mx-auto px-4 text-center">
-          <div className="mb-6">
-            <div className="inline-block mb-4 bg-white/10 backdrop-blur-sm p-4 rounded-2xl">
-              <img 
-                src="https://cdn.poehali.dev/files/фон 72.PNG" 
-                alt="Церковь Бога Моего" 
-                className="w-20 h-20 object-contain mx-auto"
-              />
+      {/* Футер */}
+      <footer className="bg-primary text-white">
+        <div className="container mx-auto px-4 py-16">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
+            <div className="text-center md:text-left">
+              <div className="flex items-center gap-4 justify-center md:justify-start mb-4">
+                <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center">
+                  <img src="https://cdn.poehali.dev/files/фон 72.PNG" alt="" className="w-10 h-10 object-contain" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>Церковь Бога Моего</p>
+                  <p className="text-white/50 text-xs tracking-widest uppercase">Иркутск</p>
+                </div>
+              </div>
+              <p className="text-white/50 text-sm max-w-xs">
+                Место, где каждый может встретиться с живым Богом
+              </p>
             </div>
-            <h3 className="text-2xl font-semibold mb-2">Церковь Бога Моего</h3>
-            <p className="text-white/80">Павла Красильникова 109</p>
+
+            <div className="text-center md:text-right">
+              <p className="text-white/40 text-sm mb-2">Павла Красильникова 109, Иркутск</p>
+              <a href="tel:+79041304051" className="text-white/70 hover:text-accent transition-colors text-sm">+7 (904) 130-40-51</a>
+            </div>
           </div>
 
-          <p className="text-white/60 text-sm">
-            © 2026 Церковь Бога Моего. Все права защищены.
-          </p>
+          <div className="mt-10 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-white/30 text-xs">© 2026 Церковь Бога Моего. Все права защищены.</p>
+            <div className="flex gap-4">
+              <a href="https://vk.com/cerkv_irkutsk?from=groups" target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-accent transition-colors text-xs">ВКонтакте</a>
+              <a href="https://rutube.ru/channel/41528628/" target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-accent transition-colors text-xs">RuTube</a>
+            </div>
+          </div>
         </div>
       </footer>
 
+      {/* Кнопка наверх */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 w-12 h-12 bg-primary text-white rounded-2xl shadow-xl shadow-primary/30 flex items-center justify-center z-50"
+            initial={{ opacity: 0, scale: 0, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0, y: 20 }}
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Icon name="ArrowUp" size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Диалоги */}
       <Dialog open={showSundayDialog} onOpenChange={setShowSundayDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-primary">Что такое воскресное христианское богослужение</DialogTitle>
+            <DialogTitle className="text-2xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Воскресное богослужение
+            </DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
                 {new Date() < new Date('2026-06-14') && (
-                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-300 rounded-lg p-4">
+                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-300 rounded-xl p-4">
                     <span className="text-amber-500 text-xl">⏰</span>
                     <div>
                       <p className="font-semibold text-amber-800">Внимание! Изменение времени</p>
@@ -764,9 +887,9 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={showWorshipDialog} onOpenChange={setShowWorshipDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-primary">Поклонение Богу</DialogTitle>
+            <DialogTitle className="text-2xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>Поклонение Богу</DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
                 <p>Поклонение Богу — это время, когда верующие собираются вместе, чтобы выразить свою любовь, благодарность и преклонение перед Господом через молитву и песни.</p>
@@ -779,9 +902,9 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={showBibleDialog} onOpenChange={setShowBibleDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-primary">Изучение Библии</DialogTitle>
+            <DialogTitle className="text-2xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>Изучение Библии</DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
                 <p>Изучение Библии в малых группах — это возможность глубже понять Священное Писание, обсудить его значение и применение в повседневной жизни.</p>
@@ -794,9 +917,9 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={showPrayerDialog} onOpenChange={setShowPrayerDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-primary">Молитвенное собрание</DialogTitle>
+            <DialogTitle className="text-2xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>Молитвенное собрание</DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
                 <p>Молитвенное собрание — это особое время, когда верующие объединяются в совместной молитве, обращаясь к Богу с благодарностью, просьбами и ходатайством.</p>
@@ -809,9 +932,9 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={showSistersDialog} onOpenChange={setShowSistersDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-primary">Сестринский разговор</DialogTitle>
+            <DialogTitle className="text-2xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>Сестринский разговор</DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
                 <p>Сестринский разговор — это встреча женщин церкви для общения, молитвы и взаимной поддержки в атмосфере доверия и любви.</p>
@@ -824,9 +947,9 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={showBrothersDialog} onOpenChange={setShowBrothersDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-primary">Братский разговор</DialogTitle>
+            <DialogTitle className="text-2xl text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>Братский разговор</DialogTitle>
             <DialogDescription asChild>
               <div className="text-base space-y-4 pt-4">
                 <p>Братский разговор — это встреча мужчин церкви для общения, молитвы и взаимной поддержки, где братья укрепляют друг друга в вере.</p>
@@ -837,24 +960,6 @@ const Index = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-
-      {showScrollTop && (
-        <motion.button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-primary text-white p-4 rounded-full shadow-lg z-50"
-          aria-label="Наверх"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
-          whileHover={{ scale: 1.1, boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)" }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Icon name="ArrowUp" size={24} />
-        </motion.button>
-      )}
-
-
     </div>
   );
 };
