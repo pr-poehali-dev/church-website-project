@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +23,10 @@ const Index = () => {
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentDay, setCurrentDay] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, name: '' });
+  const [prayerSent, setPrayerSent] = useState(false);
+  const [prayerText, setPrayerText] = useState('');
+  const [activeGallery, setActiveGallery] = useState<number | null>(null);
   const { scrollYProgress, scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], ["0%", "30%"]);
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -90,6 +94,48 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Таймер до следующего служения
+  useEffect(() => {
+    const serviceSchedule = [
+      { day: 0, hour: 11, minute: 0, name: 'Воскресное служение' },
+      { day: 1, hour: 8, minute: 0, name: 'Поклонение Богу' },
+      { day: 2, hour: 8, minute: 0, name: 'Изучение Библии' },
+      { day: 3, hour: 19, minute: 0, name: 'Молитвенное собрание' },
+      { day: 4, hour: 19, minute: 0, name: 'Сестринский разговор' },
+      { day: 5, hour: 19, minute: 0, name: 'Братский разговор' },
+    ];
+    const calcCountdown = () => {
+      const now = new Date();
+      const irkutsk = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Irkutsk' }));
+      const curDay = irkutsk.getDay();
+      const curH = irkutsk.getHours();
+      const curM = irkutsk.getMinutes();
+      const curS = irkutsk.getSeconds();
+      let next = serviceSchedule.find(s => s.day > curDay || (s.day === curDay && (s.hour > curH || (s.hour === curH && s.minute > curM))));
+      if (!next) next = serviceSchedule[0];
+      let daysUntil = next.day - curDay;
+      if (daysUntil < 0 || (daysUntil === 0 && (next.hour < curH || (next.hour === curH && next.minute <= curM)))) daysUntil += 7;
+      const totalSeconds = daysUntil * 86400 + next.hour * 3600 + next.minute * 60 - curH * 3600 - curM * 60 - curS;
+      setCountdown({
+        days: Math.floor(totalSeconds / 86400),
+        hours: Math.floor((totalSeconds % 86400) / 3600),
+        minutes: Math.floor((totalSeconds % 3600) / 60),
+        seconds: totalSeconds % 60,
+        name: next.name,
+      });
+    };
+    calcCountdown();
+    const t = setInterval(calcCountdown, 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const galleryImages = [
+    { src: 'https://cdn.poehali.dev/files/фон 56.JPEG', caption: 'Наш храм' },
+    { src: 'https://cdn.poehali.dev/files/фон 32.jpg', caption: 'Пастор Алексей' },
+    { src: 'https://cdn.poehali.dev/files/фон 65.jpg', caption: 'Логотип церкви' },
+    { src: 'https://cdn.poehali.dev/files/фон 72.PNG', caption: 'Символ веры' },
+  ];
 
   const navItems = [
     { id: "home", label: "Главная" },
@@ -567,6 +613,42 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Таймер до следующего служения */}
+      <section className="py-16 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 50% 50%, hsl(38 92% 50%) 0%, transparent 60%)" }} />
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Следующее служение</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-8" style={{ fontFamily: 'Playfair Display, serif' }}>
+              {countdown.name}
+            </h3>
+            <div className="grid grid-cols-4 gap-3 md:gap-6 mb-6">
+              {[
+                { v: countdown.days, label: 'Дней' },
+                { v: countdown.hours, label: 'Часов' },
+                { v: countdown.minutes, label: 'Минут' },
+                { v: countdown.seconds, label: 'Секунд' },
+              ].map(({ v, label }) => (
+                <div key={label} className="glass rounded-2xl py-5 px-2 flex flex-col items-center">
+                  <motion.span
+                    key={v}
+                    initial={{ scale: 1.3, opacity: 0.5 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.25 }}
+                    className="text-3xl md:text-5xl font-bold text-white tabular-nums"
+                    style={{ fontFamily: 'Playfair Display, serif' }}
+                  >
+                    {String(v).padStart(2, '0')}
+                  </motion.span>
+                  <span className="text-white/40 text-[10px] md:text-xs uppercase tracking-widest mt-2">{label}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-white/40 text-sm">Иркутское время (UTC+8)</p>
+          </div>
+        </div>
+      </section>
+
       {/* Служения */}
       <section id="ministries" className="py-24 md:py-32 bg-primary overflow-hidden relative">
         <div className="absolute inset-0 opacity-10"
@@ -612,6 +694,98 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Галерея */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12 animate-on-scroll animate-fade-up">
+            <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Наша жизнь</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Фотогалерея
+            </h2>
+            <div className="section-divider" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-5xl mx-auto">
+            {galleryImages.map((img, idx) => (
+              <motion.div
+                key={idx}
+                className={`relative rounded-2xl overflow-hidden cursor-pointer group ${idx === 0 ? 'col-span-2 row-span-2' : ''}`}
+                style={{ aspectRatio: idx === 0 ? '1/1' : '1/1' }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                onClick={() => setActiveGallery(idx)}
+              >
+                <img
+                  src={img.src}
+                  alt={img.caption}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  style={{ minHeight: idx === 0 ? '320px' : '160px' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4">
+                  <p className="text-white text-sm font-medium">{img.caption}</p>
+                </div>
+                <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Icon name="Expand" size={14} className="text-white" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {activeGallery !== null && (
+          <motion.div
+            className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveGallery(null)}
+          >
+            <motion.div
+              className="relative max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 200 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <img
+                src={galleryImages[activeGallery].src}
+                alt={galleryImages[activeGallery].caption}
+                className="w-full h-full object-contain"
+              />
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+                <p className="text-white font-medium text-lg" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  {galleryImages[activeGallery].caption}
+                </p>
+              </div>
+              <button
+                onClick={() => setActiveGallery(null)}
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors"
+              >
+                <Icon name="X" size={18} className="text-white" />
+              </button>
+              <button
+                onClick={() => setActiveGallery(p => p! > 0 ? p! - 1 : galleryImages.length - 1)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors"
+              >
+                <Icon name="ChevronLeft" size={20} className="text-white" />
+              </button>
+              <button
+                onClick={() => setActiveGallery(p => p! < galleryImages.length - 1 ? p! + 1 : 0)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors"
+              >
+                <Icon name="ChevronRight" size={20} className="text-white" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Проповеди */}
       <section id="sermons" className="py-24 md:py-32 bg-background relative overflow-hidden">
@@ -677,6 +851,115 @@ const Index = () => {
                 </Button>
               </a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Молитва дня */}
+      <section className="py-24 bg-secondary/30 relative overflow-hidden">
+        <div className="absolute left-0 top-0 w-72 h-72 bg-accent/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="absolute right-0 bottom-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12 animate-on-scroll animate-fade-up">
+              <p className="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Обратитесь к Богу</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Молитва дня
+              </h2>
+              <div className="section-divider" />
+            </div>
+
+            {/* Цитата-молитва */}
+            <motion.div
+              className="relative rounded-3xl overflow-hidden mb-10"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="bg-primary p-8 md:p-12 text-center relative">
+                <div className="absolute top-6 left-8 text-accent/20 text-8xl font-serif leading-none select-none">"</div>
+                <div className="absolute bottom-2 right-8 text-accent/20 text-8xl font-serif leading-none select-none">"</div>
+                <p className="text-white text-xl md:text-2xl leading-relaxed relative z-10" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                  Господи, благодарю Тебя за этот день. Укрепи мою веру, наполни моё сердце миром и любовью. Помоги мне быть светом для окружающих и хранить упование на Тебя во всех обстоятельствах.
+                </p>
+                <p className="text-accent mt-6 text-sm font-medium tracking-widest uppercase relative z-10">Аминь</p>
+              </div>
+            </motion.div>
+
+            {/* Форма личной молитвы */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Card className="border border-border/40 shadow-xl shadow-primary/8 rounded-3xl">
+                <CardContent className="p-8 md:p-10">
+                  <h3 className="text-xl font-bold text-primary mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Поделитесь своей молитвенной нуждой
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-6">
+                    Напишите свою просьбу — наша церковь помолится за вас
+                  </p>
+                  <AnimatePresence mode="wait">
+                    {!prayerSent ? (
+                      <motion.div
+                        key="form"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <textarea
+                          value={prayerText}
+                          onChange={e => setPrayerText(e.target.value)}
+                          placeholder="Господи, прошу о помощи в..."
+                          rows={4}
+                          className="w-full px-5 py-4 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all resize-none text-sm mb-4"
+                          style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}
+                        />
+                        <Button
+                          className="w-full py-6 rounded-xl text-base font-semibold shadow-lg shadow-primary/20"
+                          onClick={() => { if (prayerText.trim()) setPrayerSent(true); }}
+                          disabled={!prayerText.trim()}
+                        >
+                          <Icon name="Send" className="mr-2" size={16} />
+                          Отправить молитвенную нужду
+                        </Button>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="thanks"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-center py-8"
+                      >
+                        <motion.div
+                          className="w-20 h-20 rounded-full bg-accent/15 flex items-center justify-center mx-auto mb-5"
+                          animate={{ scale: [1, 1.1, 1] }}
+                          transition={{ duration: 1, repeat: 2 }}
+                        >
+                          <Icon name="Heart" size={36} className="text-accent" />
+                        </motion.div>
+                        <h4 className="text-2xl font-bold text-primary mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
+                          Мы помолимся за вас
+                        </h4>
+                        <p className="text-muted-foreground text-sm mb-6">
+                          Ваша молитвенная нужда принята. Бог слышит каждое сердце.
+                        </p>
+                        <Button
+                          variant="outline"
+                          className="rounded-xl"
+                          onClick={() => { setPrayerSent(false); setPrayerText(''); }}
+                        >
+                          Написать ещё
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </div>
       </section>
